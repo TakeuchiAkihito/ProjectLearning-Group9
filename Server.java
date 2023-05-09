@@ -41,18 +41,26 @@ class ServThread extends Thread{
 		        while(true) {
 		        	switch(input.nextInt()) {
 		        	case 1:
-		        		for(int i=0;i<=Server.num_account;i++) {
-		        			if((Server.account[i].ID == input.next()) && (Server.account[i].PW == input.next())) {
-		        				output.println("1");
-		        				break;
-		        			}
-		        			if(i == Server.num_account) {
-		        				output.println("0");
-		        			}
+		        		Case1:{
+		        			for(int i=0;i<Server.num_account;i++) {
+			        			if((Server.account[i].ID == input.nextLine()) && (Server.account[i].PW == input.nextLine())) {
+			        				output.println("1");
+			        				break Case1;
+			        			}		        			
+			        		}
+		        			output.println("0");
+		        			break;
 		        		}
 		        		break;
-		
 		        	case 2:
+		        		if(Server.num_account<10000) {
+		        			Server.account[Server.num_account].ID=input.nextLine();
+			        		Server.account[Server.num_account].PW=input.nextLine();
+			        		Server.account[Server.num_account].Q_sec=input.nextLine();
+			        		output.println("1");
+		        		}else {
+		        			output.println("0");
+		        		}break;
 		        	case 3:
 		        	case 4:
 		        	case 5:
