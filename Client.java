@@ -27,8 +27,8 @@ import javax.swing.border.LineBorder;
 public class Client extends JFrame implements ActionListener{
 	int color;
 	int rgb;
-    JPanel cardPanel;
-    CardLayout layout;
+    static JPanel cardPanel;
+    static CardLayout layout;
     String ID ="";
     String name_enemy;
     int win = 1,lose = 1,cast;
@@ -77,6 +77,7 @@ public class Client extends JFrame implements ActionListener{
             tb.start();
        }catch (Exception e) {
             e.printStackTrace();
+            layout.show(cardPanel, "1");
        }
     }
 
@@ -468,7 +469,7 @@ public class Client extends JFrame implements ActionListener{
         		updateBoard(othello.getBoardState());
         		turn.setText("あなたの番です");
         		button11.setEnabled(true);
-        		squareChange(true);
+        		squareChange(true, othello.getBoardState());
         	}else {
         		// othelloに手番情報を伝達
         		othello.setColor(Othello.WHITE, Othello.BRACK);
@@ -493,7 +494,7 @@ public class Client extends JFrame implements ActionListener{
 	            	othello.judge();
 	        		updateBoard(othello.getBoardState());
 	        		turn.setText("あなたの番です");
-	        		squareChange(true);
+	        		squareChange(true, othello.getBoardState());
         		}	
         		
         	}
@@ -536,7 +537,7 @@ public class Client extends JFrame implements ActionListener{
             	layout.show(cardPanel, "5");
             	updateBoard(othello.getBoardState());
             	button11.setEnabled(false);
-            	squareChange(false);
+            	squareChange(false, othello.getBoardState());
             	turn.setText("相手の番です");
             	
             	// サーバに操作情報を送信
@@ -563,7 +564,7 @@ public class Client extends JFrame implements ActionListener{
             	if(othello.judge() != 0) {
             		layout.show(cardPanel, "5");
             		turn.setText("あなたの番です");
-                	squareChange(true);
+                	squareChange(true, othello.getBoardState());
             			
             	}else {
             		turn.setText(othello.getOutcome());
@@ -588,7 +589,7 @@ public class Client extends JFrame implements ActionListener{
                 }
                 layout.show(cardPanel, "5");
                 turn.setText("あなたの番です");
-            	squareChange(true);
+            	squareChange(true, othello.getBoardState());
             	updateBoard(othello.getBoardState());   	
                 	
             }
@@ -664,13 +665,23 @@ public class Client extends JFrame implements ActionListener{
     	}
     }
     
-    public void squareChange(boolean flag) {
-    	for(int i = 0; i < square.length; i++) {
-    		for(int j = 0; j < square[i].length; j++) {
-    			square[i][j].setEnabled(flag);
-    		}
+    public void squareChange(boolean flag, int[][] board) {
+    	if( !flag ) {
+	    	for(int i = 0; i < square.length; i++) {
+	    		for(int j = 0; j < square[i].length; j++) {
+	    			square[i][j].setEnabled(flag);
+	    		}
+	    	}
+    	}else {
+    		for(int i = 0; i < square.length; i++) {
+	    		for(int j = 0; j < square[i].length; j++) {
+	    			if( board[i+1][j+1] == Othello.OK ) {
+	    				square[i][j].setEnabled(flag);
+	    			}
+	    		}
+	    	}
     	}
-    	
+	    	
     }
     
     
