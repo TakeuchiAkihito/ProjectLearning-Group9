@@ -4,7 +4,7 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Scanner;
-public class J3 {
+public class Server_tmp {
     public static void main(String[] args) {
         try{
             ServerSocket server = new ServerSocket(3838, 5);
