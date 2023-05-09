@@ -9,8 +9,11 @@ import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
@@ -27,8 +30,8 @@ import javax.swing.border.LineBorder;
 public class Client extends JFrame implements ActionListener{
 	int color;
 	int rgb;
-    static JPanel cardPanel;
-    static CardLayout layout;
+    JPanel cardPanel;
+    CardLayout layout;
     String ID ="";
     String name_enemy;
     int win = 1,lose = 1,cast;
@@ -68,16 +71,22 @@ public class Client extends JFrame implements ActionListener{
     
     public static void main(String[] args) {
     	try {
-    		socket = new Socket("127.0.0.1", 3838);
-    		output = new PrintWriter(socket.getOutputStream());
-    		input = new Scanner(socket.getInputStream());
-    		ta = new Mul(); 
-            tb = new Add(); 
-            ta.start();
-            tb.start();
+    		//socket = new Socket("127.0.0.1", 3838);
+    		//output = new PrintWriter(socket.getOutputStream());
+    		//input = new Scanner(socket.getInputStream());
+    		Client frame = new Client("BorderLayoutDemo");
+    		frame.setTitle("Othello");
+            frame.setSize(310, 485);
+            frame.setLocationRelativeTo(null);
+            //frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+            frame.setVisible(true);
+    		//ta = new Mul(); 
+            //tb = new Add(); 
+            //ta.start();
+            //tb.start();
        }catch (Exception e) {
             e.printStackTrace();
-            layout.show(cardPanel, "1");
+            
        }
     }
 
@@ -167,7 +176,7 @@ public class Client extends JFrame implements ActionListener{
         pw_new_input.setBounds(170, 175, 120, 30);
         panel02.add(pw_new_input);
         
-        JLabel Q_sec = new JLabel("秘密の質問");
+        JLabel Q_sec = new JLabel("生年月日(例:1月1日は0101)");
         Q_sec.setBounds(10, 200, 300, 80);
         panel02.add(Q_sec);
         
@@ -414,6 +423,7 @@ public class Client extends JFrame implements ActionListener{
     
     
     public void actionPerformed(ActionEvent e) {
+    	try {
     	int locate_x,locate_y;
     	String cmd_enemy;
     	//JButton b = (JButton) e.getSource(); 
@@ -422,6 +432,17 @@ public class Client extends JFrame implements ActionListener{
         
         switch(cmd) {
         case "A":
+        	try {
+				socket = new Socket("127.0.0.1", 3838);
+				output = new PrintWriter(socket.getOutputStream());
+	    		input = new Scanner(socket.getInputStream());
+			} catch (UnknownHostException e1) {
+				// TODO 自動生成された catch ブロック
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				// TODO 自動生成された catch ブロック
+				e1.printStackTrace();
+			}
         	layout.show(cardPanel, "4");
         	if(authentication(id_input.getText(),pw_input.getText())) {
         		uh_mes.setText("ようこそ"+ID+"さん");
@@ -549,6 +570,10 @@ public class Client extends JFrame implements ActionListener{
             	tm.start();
         	}
         }
+    	}catch(NoSuchElementException e1) {
+    		layout.show(cardPanel, "1");
+    		System.exit(0);
+    	}
             	
             	
     }
@@ -632,7 +657,7 @@ public class Client extends JFrame implements ActionListener{
     	//int win = Integer.parseInt(input.nextLine());
     	//int lose = Integer.parseInt(input.nextLine());
     	//int cast = Integer.parseInt(input.nextLine());
-    	double late = (double)win * 100/ (win + lose + cast);
+    	double late = (double)win/lose;
     	label_win.setText("勝ち数  "+win);
     	label_lose.setText("負け数  "+lose);
     	label_cast.setText("投了数  "+cast);
