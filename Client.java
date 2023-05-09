@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.Icon;
 import javax.swing.JButton;
@@ -48,6 +49,7 @@ public class Client extends JFrame implements ActionListener{
     JTextField id_new_input;
     JTextField pw_new_input;
     JTextField Q_sec_input;
+    JTextField outcomeField;
     JButton button11;
     static Mul ta; 
     static Add tb; 
@@ -62,6 +64,7 @@ public class Client extends JFrame implements ActionListener{
     Othello othello = new Othello();
    
     Timer tm;
+	private JButton button12;
     
     public static void main(String[] args) {
     	try {
@@ -84,7 +87,7 @@ public class Client extends JFrame implements ActionListener{
         JPanel panel01 = new JPanel();
         panel01.setLayout(null);
         panel01.setPreferredSize(new Dimension(200, 100));
-        panel01.setBackground(new Color(159,138,72));
+        panel01.setBackground(new Color(255,255,255));
         
         JLabel label=new JLabel("Othello");
         Font f = new Font("Serif", Font.PLAIN, 30);
@@ -113,18 +116,21 @@ public class Client extends JFrame implements ActionListener{
         JButton button1 = new JButton("ログイン");
         button1.setBounds(0, 220, 300, 50);
         button1.setBackground(Color.BLACK);
+        button1.setForeground(Color.WHITE);
         button1.setActionCommand("A");
         button1.addActionListener(this);
 
         JButton button2 = new JButton("新規アカウント作成");
         button2.setBounds(0, 350, 300, 50);
         button2.setBackground(Color.BLACK);
+        button2.setForeground(Color.WHITE);
         button2.setActionCommand("B");
         button2.addActionListener(this);
 
         JButton button3 = new JButton("パスワードを忘れた");
         button3.setBounds(0, 400, 300, 50);
         button3.setBackground(Color.BLACK);
+        button3.setForeground(Color.WHITE);
         button3.setActionCommand("C");
         button3.addActionListener(this);
 
@@ -138,7 +144,7 @@ public class Client extends JFrame implements ActionListener{
         JPanel panel02 = new JPanel();
         panel02.setLayout(null);
         panel02.setPreferredSize(new Dimension(200, 100));
-        panel02.setBackground(new Color(159,138,72));
+        panel02.setBackground(new Color(255,255,255));
         
         fault = new JLabel("");
         fault.setBounds(10, 500, 300, 80);
@@ -171,6 +177,7 @@ public class Client extends JFrame implements ActionListener{
         JButton button4 = new JButton("新規アカウント作成");
         button4.setBounds(0, 350, 300, 50);
         button4.setBackground(Color.BLACK);
+        button4.setForeground(Color.WHITE);
         button4.setActionCommand("D");
         button4.addActionListener(this);
         panel02.add(button4);
@@ -178,6 +185,7 @@ public class Client extends JFrame implements ActionListener{
         JButton button5 = new JButton("ホームに戻る");
         button5.setBounds(0, 400, 300, 50);
         button5.setBackground(Color.BLACK);
+        button5.setForeground(Color.WHITE);
         button5.setActionCommand("D");
         button5.addActionListener(this);
         panel02.add(button5);
@@ -186,7 +194,7 @@ public class Client extends JFrame implements ActionListener{
         JPanel panel03 = new JPanel();
         panel03.setLayout(null);
         panel03.setPreferredSize(new Dimension(200, 100));
-        panel03.setBackground(new Color(159,138,72));
+        panel03.setBackground(new Color(255,255,255));
         
         fault2 = new JLabel("");
         fault2.setBounds(10, 500, 300, 80);
@@ -211,6 +219,7 @@ public class Client extends JFrame implements ActionListener{
         JButton button6 = new JButton("パスワードを再設定する");
         button6.setBounds(0, 220, 300, 50);
         button6.setBackground(Color.BLACK);
+        button6.setForeground(Color.WHITE);
         button6.setActionCommand("E");
         button6.addActionListener(this);
         panel03.add(button6);
@@ -218,6 +227,7 @@ public class Client extends JFrame implements ActionListener{
         JButton button7 = new JButton("ホームに戻る");
         button7.setBounds(0, 400, 300, 50);
         button7.setBackground(Color.BLACK);
+        button7.setForeground(Color.WHITE);
         button7.setActionCommand("D");
         button7.addActionListener(this);
         panel03.add(button7);
@@ -226,7 +236,7 @@ public class Client extends JFrame implements ActionListener{
         JPanel panel04 = new JPanel();
         panel04.setLayout(null);
         panel04.setPreferredSize(new Dimension(200, 100));
-        panel04.setBackground(new Color(159,138,72));
+        panel04.setBackground(new Color(255,255,255));
         
         uh_mes = new JLabel("ようこそ"+ID+"さん");
         uh_mes.setBounds(10, 10, 300, 80);
@@ -237,6 +247,7 @@ public class Client extends JFrame implements ActionListener{
         JButton button8 = new JButton("対局する");
         button8.setBounds(0, 150, 300, 50);
         button8.setBackground(Color.BLACK);
+        button8.setForeground(Color.WHITE);
         button8.setActionCommand("F");
         button8.addActionListener(this);
         panel04.add(button8);
@@ -244,6 +255,7 @@ public class Client extends JFrame implements ActionListener{
         JButton button9 = new JButton("対局成績を見る");
         button9.setBounds(0, 250, 300, 50);
         button9.setBackground(Color.BLACK);
+        button9.setForeground(Color.WHITE);
         button9.setActionCommand("G");
         button9.addActionListener(this);
         panel04.add(button9);
@@ -251,6 +263,7 @@ public class Client extends JFrame implements ActionListener{
         JButton button10 = new JButton("ログアウト");
         button10.setBounds(0, 350, 300, 50);
         button10.setBackground(Color.BLACK);
+        button10.setForeground(Color.WHITE);
         button10.setActionCommand("D");
         button10.addActionListener(this);
         panel04.add(button10);
@@ -259,7 +272,7 @@ public class Client extends JFrame implements ActionListener{
         JPanel panel05 = new JPanel();
         panel05.setLayout(null);
         panel05.setPreferredSize(new Dimension(200, 100));
-        panel05.setBackground(new Color(159,138,72));
+        panel05.setBackground(new Color(255,255,255));
         
         JPanel gp = new JPanel();
         
@@ -288,19 +301,29 @@ public class Client extends JFrame implements ActionListener{
         //panel05.add(gp);
         
         turn = new JLabel("");
-        turn.setBounds(110, 270, 300, 80);
+        turn.setBounds(110, 245, 300, 80);
         panel05.add(turn);
         
         JLabel enemy = new JLabel("対戦相手 : "+name_enemy);
-        enemy.setBounds(110, 310, 300, 80);
+        enemy.setBounds(110, 280, 300, 80);
         panel05.add(enemy);
         
         button11 = new JButton("投了する");
         button11.setBounds(0, 400, 300, 50);
         button11.setBackground(Color.BLACK);
+        button11.setForeground(Color.WHITE);
         button11.setActionCommand("H");
         button11.addActionListener(this);
         panel05.add(button11);
+        
+        button12 = new JButton("パスする");
+        button12.setBounds(0, 350, 300, 50);
+        button12.setBackground(Color.BLACK);
+        button12.setForeground(Color.WHITE);
+        button12.setActionCommand("PATH");
+        button12.addActionListener(this);
+        button12.setEnabled(false);
+        panel05.add(button12);
         
         panel05.add(gp);
         
@@ -308,7 +331,7 @@ public class Client extends JFrame implements ActionListener{
         JPanel panel06 = new JPanel();
         panel06.setLayout(null);
         panel06.setPreferredSize(new Dimension(200, 100));
-        panel06.setBackground(new Color(159,138,72));
+        panel06.setBackground(new Color(255,255,255));
         
         JLabel label6 = new JLabel(ID+"さんの対局成績");
         label6.setFont(f2);
@@ -338,6 +361,7 @@ public class Client extends JFrame implements ActionListener{
         JButton button12 = new JButton("戻る");
         button12.setBounds(0, 350, 300, 50);
         button12.setBackground(Color.BLACK);
+        button12.setForeground(Color.WHITE);
         button12.setActionCommand("I");
         button12.addActionListener(this);
         panel06.add(button12);
@@ -346,7 +370,7 @@ public class Client extends JFrame implements ActionListener{
         JPanel panel07 = new JPanel();
         panel07.setLayout(null);
         panel07.setPreferredSize(new Dimension(200, 100));
-        panel07.setBackground(new Color(159,138,72));
+        panel07.setBackground(new Color(255,255,255));
         
         JLabel pwnew = new JLabel("新しいパスワード");
         pwnew.setBounds(10, 150, 300, 80);
@@ -359,6 +383,7 @@ public class Client extends JFrame implements ActionListener{
         JButton button13 = new JButton("確定");
         button13.setBounds(0, 220, 300, 50);
         button13.setBackground(Color.BLACK);
+        button13.setForeground(Color.WHITE);
         button13.setActionCommand("D");
         button13.addActionListener(this);
         panel07.add(button13);
@@ -487,6 +512,13 @@ public class Client extends JFrame implements ActionListener{
         case "I":
         	layout.show(cardPanel, "4");
             break;
+        case "PATH":
+        	output.println(cmd);
+        	output.flush();
+        	cmd_enemy = input.nextLine();
+    		readServer(cmd_enemy);
+    		break;
+        	
             
         default:
         	if( e.getSource() == tm ) {
@@ -527,36 +559,40 @@ public class Client extends JFrame implements ActionListener{
     	if(cmd_enemy.equals(Othello.RETIRE)) {
     		layout.show(cardPanel, "4");
     	}else {
-    		while(true) {
-        		if(cmd_enemy.equals(Othello.PASS)) {
-            		if(othello.judge() != 0) {
-            			layout.show(cardPanel, "5");
-            		}else {
-            			layout.show(cardPanel, "4");
-            			break;
-            		}
-            		//judge(color);
+        	if(cmd_enemy.equals(Othello.PASS)) {
+            	if(othello.judge() != 0) {
+            		layout.show(cardPanel, "5");
+            		turn.setText("あなたの番です");
+                	squareChange(true);
+            			
             	}else {
-            		locate_x = Integer.parseInt(cmd_enemy)/10;
-                	locate_y = Integer.parseInt(cmd_enemy)%10;
-                	othello.reverse(othello.getEnemyColor(),locate_x,locate_y);
-                
-                	
-                	layout.show(cardPanel, "5");
-                	if(othello.judge() == 0) {
-                		updateBoard(othello.getBoardState());
-                		//output.println("pass");
-                		//cmd_enemy = input.nextLine();
-                		
-                	}else {
-                		//layout.show(cardPanel, "5");
-                		turn.setText("あなたの番です");
-                		squareChange(true);
-                		updateBoard(othello.getBoardState());
-                		break;
-                	}
+            		turn.setText(othello.getOutcome());
+            		try {
+						TimeUnit.SECONDS.sleep(5);
+					} catch (InterruptedException e) {
+						// TODO 自動生成された catch ブロック
+						e.printStackTrace();
+					}
+            		layout.show(cardPanel, "4");
+            			
             	}
-        	}
+            		
+            }else {
+            	locate_x = Integer.parseInt(cmd_enemy)/10;
+                locate_y = Integer.parseInt(cmd_enemy)%10;
+                othello.reverse(othello.getEnemyColor(),locate_x,locate_y);
+                if( othello.judge() == 0 ) {
+                	button12.setEnabled(true);
+                }else {
+                	button12.setEnabled(false);
+                }
+                layout.show(cardPanel, "5");
+                turn.setText("あなたの番です");
+            	squareChange(true);
+            	updateBoard(othello.getBoardState());   	
+                	
+            }
+        	
     	}
 		
     }
@@ -698,6 +734,9 @@ class Othello{
 	public static final String REAR = "rear";
 	public static final String RETIRE = "retire";
 	public static final String PASS = "pass";
+	public static final String WIN = "勝ち";
+	public static final String LOSE = "負け";
+	public static final String DRAW = "引き分け";
 	
 	int[][] board = new int[10][10];
 	int myColor;
@@ -983,6 +1022,32 @@ class Othello{
 				}
 			}
 		}
+	}
+	
+	public String getOutcome() {
+		int myCount = 0;
+		int enemyCount = 0;
+		String outcome;
+		
+		for(int i = 1; i <= 8; i++) {
+			for(int j = 1; j <= 8; j++) {
+				if(board[i][j] == myColor) {
+					myCount++;
+				}else if(board[i][j] == enemyColor) {
+					enemyCount++;
+				}
+			}
+		}
+		
+		if(myCount > enemyCount ) {
+			outcome = Othello.WIN;
+		}else if(myCount < enemyCount) {
+			outcome = Othello.LOSE;
+		}else {
+			outcome = Othello.DRAW;
+		}
+		
+		return outcome;
 	}
 	
 		
