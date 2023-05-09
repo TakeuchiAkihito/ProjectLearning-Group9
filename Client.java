@@ -632,7 +632,7 @@ public class Client extends JFrame implements ActionListener{
     	//int win = Integer.parseInt(input.nextLine());
     	//int lose = Integer.parseInt(input.nextLine());
     	//int cast = Integer.parseInt(input.nextLine());
-    	double late = (double)win/lose;
+    	double late = (double)win * 100/ (win + lose + cast);
     	label_win.setText("勝ち数  "+win);
     	label_lose.setText("負け数  "+lose);
     	label_cast.setText("投了数  "+cast);
