@@ -196,7 +196,7 @@ public class Client extends JFrame implements ActionListener{
         button5.setBounds(0, 400, 300, 50);
         button5.setBackground(Color.BLACK);
         button5.setForeground(Color.WHITE);
-        button5.setActionCommand("D");
+        button5.setActionCommand("J");
         button5.addActionListener(this);
         panel02.add(button5);
         
@@ -218,7 +218,7 @@ public class Client extends JFrame implements ActionListener{
         id_renew_input.setBounds(170, 125, 120, 30);
         panel03.add(id_renew_input);
         
-        JLabel sq = new JLabel("秘密の質問");
+        JLabel sq = new JLabel("生年月日(例:1月1日は0101)");
         sq.setBounds(10, 150, 300, 80);
         panel03.add(sq);
         
@@ -238,7 +238,7 @@ public class Client extends JFrame implements ActionListener{
         button7.setBounds(0, 400, 300, 50);
         button7.setBackground(Color.BLACK);
         button7.setForeground(Color.WHITE);
-        button7.setActionCommand("D");
+        button7.setActionCommand("J");
         button7.addActionListener(this);
         panel03.add(button7);
         
@@ -274,7 +274,7 @@ public class Client extends JFrame implements ActionListener{
         button10.setBounds(0, 350, 300, 50);
         button10.setBackground(Color.BLACK);
         button10.setForeground(Color.WHITE);
-        button10.setActionCommand("D");
+        button10.setActionCommand("J");
         button10.addActionListener(this);
         panel04.add(button10);
         
@@ -443,7 +443,6 @@ public class Client extends JFrame implements ActionListener{
 				// TODO 自動生成された catch ブロック
 				e1.printStackTrace();
 			}
-        	layout.show(cardPanel, "4");
         	if(authentication(id_input.getText(),pw_input.getText())) {
         		uh_mes.setText("ようこそ"+ID+"さん");
         		layout.show(cardPanel, "4");
@@ -534,6 +533,11 @@ public class Client extends JFrame implements ActionListener{
         case "I":
         	layout.show(cardPanel, "4");
             break;
+            
+        case "J":
+        	layout.show(cardPanel, "1");
+        	break;
+        	
         case "PATH":
         	output.println(cmd);
         	output.flush();
