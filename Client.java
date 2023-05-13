@@ -13,7 +13,6 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
 
 import javax.swing.Icon;
 import javax.swing.JButton;
@@ -26,8 +25,6 @@ import javax.swing.Timer;
 import javax.swing.border.LineBorder;
 
 public class Client extends JFrame implements ActionListener{
-	int color;
-	int rgb;
     JPanel cardPanel;
     CardLayout layout;
     String ID ="";
@@ -50,47 +47,65 @@ public class Client extends JFrame implements ActionListener{
     JTextField id_new_input;
     JTextField pw_new_input;
     JTextField Q_sec_input;
-    JTextField outcomeField;
+    JLabel outcomeLabel;
     JButton button11;
-    static Mul ta; 
-    static Add tb; 
-    static Socket socket;
-    static PrintWriter output;
-    static Scanner input;
-    
-   
+    JButton button12;
     JButton[][] square = new JButton[8][8];
     Icon brackStone = new BrackStone();
     Icon whiteStone = new WhiteStone();
-    Othello othello = new Othello();
+    Icon defaultIcon = new DefaultIcon();
+    Icon redIcon = new RedIcon();
+    Othello othello = new Othello();;
+    Timer tm2;
+    SaThread gameComThread;
    
-    Timer tm;
-	private JButton button12;
     
+    
+    static Socket socket;
+    static PrintWriter output;
+    static Scanner input;
+	static Client frame;
+	
     public static void main(String[] args) {
-    	try {
-    		socket = new Socket("127.0.0.1", 3838);
-    		output = new PrintWriter(socket.getOutputStream());
-    		input = new Scanner(socket.getInputStream());
-    		Client frame = new Client("BorderLayoutDemo");
-    		frame.setTitle("Othello");
-            frame.setSize(310, 485);
-            frame.setLocationRelativeTo(null);
-            //frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
-            frame.setVisible(true);
-    		//ta = new Mul(); 
-            //tb = new Add(); 
-            //ta.start();
-            //tb.start();
-       }catch (Exception e) {
-            e.printStackTrace();
-            
+    	boolean portCheck = false;
+    	int port = 0;
+    	
+    	while( !portCheck ) {
+	    	try {
+	    		
+	    		socket = new Socket("127.0.0.1", 3838);
+	    		input = new Scanner(socket.getInputStream());
+	    		portCheck = true;
+	    		port = Integer.parseInt(input.nextLine());
+	        	System.out.println(port);
+	    		socket.close();
+	            	
+	       }catch (Exception e) {
+	            e.printStackTrace();
+	            
+	       }
        }
+    	
+    	try {
+			socket = new Socket("127.0.0.1", port);
+			output = new PrintWriter(socket.getOutputStream());
+    		input = new Scanner(socket.getInputStream());
+    		
+			frame = new Client("BorderLayoutDemo");
+			frame.setTitle("Othello");
+	        frame.setSize(310, 485);
+	        frame.setLocationRelativeTo(null);
+	        frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+	        frame.setVisible(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.exit(0);
+		}
     }
 
-    public Client(String title) {
+    public Client(String title)throws Exception {
     	super(title);
-
+    	
         // ログインホーム
         JPanel panel01 = new JPanel();
         panel01.setLayout(null);
@@ -125,21 +140,21 @@ public class Client extends JFrame implements ActionListener{
         button1.setBounds(0, 220, 300, 50);
         button1.setBackground(Color.BLACK);
         button1.setForeground(Color.WHITE);
-        button1.setActionCommand("A");
+        button1.setActionCommand("LoginPage");
         button1.addActionListener(this);
 
         JButton button2 = new JButton("新規アカウント作成");
         button2.setBounds(0, 350, 300, 50);
         button2.setBackground(Color.BLACK);
         button2.setForeground(Color.WHITE);
-        button2.setActionCommand("B");
+        button2.setActionCommand("NewAccountPage");
         button2.addActionListener(this);
 
         JButton button3 = new JButton("パスワードを忘れた");
         button3.setBounds(0, 400, 300, 50);
         button3.setBackground(Color.BLACK);
         button3.setForeground(Color.WHITE);
-        button3.setActionCommand("C");
+        button3.setActionCommand("ForgetPassword");
         button3.addActionListener(this);
 
         panel01.add(label);
@@ -186,7 +201,7 @@ public class Client extends JFrame implements ActionListener{
         button4.setBounds(0, 350, 300, 50);
         button4.setBackground(Color.BLACK);
         button4.setForeground(Color.WHITE);
-        button4.setActionCommand("D");
+        button4.setActionCommand("MakeAccount");
         button4.addActionListener(this);
         panel02.add(button4);
 
@@ -194,7 +209,7 @@ public class Client extends JFrame implements ActionListener{
         button5.setBounds(0, 400, 300, 50);
         button5.setBackground(Color.BLACK);
         button5.setForeground(Color.WHITE);
-        button5.setActionCommand("J");
+        button5.setActionCommand("BackHome");
         button5.addActionListener(this);
         panel02.add(button5);
         
@@ -228,7 +243,7 @@ public class Client extends JFrame implements ActionListener{
         button6.setBounds(0, 220, 300, 50);
         button6.setBackground(Color.BLACK);
         button6.setForeground(Color.WHITE);
-        button6.setActionCommand("E");
+        button6.setActionCommand("ResetPassword");
         button6.addActionListener(this);
         panel03.add(button6);
         
@@ -236,7 +251,7 @@ public class Client extends JFrame implements ActionListener{
         button7.setBounds(0, 400, 300, 50);
         button7.setBackground(Color.BLACK);
         button7.setForeground(Color.WHITE);
-        button7.setActionCommand("J");
+        button7.setActionCommand("BackHome");
         button7.addActionListener(this);
         panel03.add(button7);
         
@@ -256,7 +271,7 @@ public class Client extends JFrame implements ActionListener{
         button8.setBounds(0, 150, 300, 50);
         button8.setBackground(Color.BLACK);
         button8.setForeground(Color.WHITE);
-        button8.setActionCommand("F");
+        button8.setActionCommand("START");
         button8.addActionListener(this);
         panel04.add(button8);
         
@@ -264,7 +279,7 @@ public class Client extends JFrame implements ActionListener{
         button9.setBounds(0, 250, 300, 50);
         button9.setBackground(Color.BLACK);
         button9.setForeground(Color.WHITE);
-        button9.setActionCommand("G");
+        button9.setActionCommand("CheckRecord");
         button9.addActionListener(this);
         panel04.add(button9);
         
@@ -272,7 +287,7 @@ public class Client extends JFrame implements ActionListener{
         button10.setBounds(0, 350, 300, 50);
         button10.setBackground(Color.BLACK);
         button10.setForeground(Color.WHITE);
-        button10.setActionCommand("J");
+        button10.setActionCommand("BackHome");
         button10.addActionListener(this);
         panel04.add(button10);
         
@@ -320,21 +335,30 @@ public class Client extends JFrame implements ActionListener{
         button11.setBounds(0, 400, 300, 50);
         button11.setBackground(Color.BLACK);
         button11.setForeground(Color.WHITE);
-        button11.setActionCommand("H");
+        button11.setActionCommand(Othello.RETIRE);
         button11.addActionListener(this);
+        button11.setEnabled(false);
         panel05.add(button11);
         
         button12 = new JButton("パスする");
         button12.setBounds(0, 350, 300, 50);
         button12.setBackground(Color.BLACK);
         button12.setForeground(Color.WHITE);
-        button12.setActionCommand("PATH");
+        button12.setActionCommand(Othello.PASS);
         button12.addActionListener(this);
         button12.setEnabled(false);
         panel05.add(button12);
         
-        panel05.add(gp);
+        outcomeLabel = new JLabel("");
+        outcomeLabel.setFont(new Font(Font.DIALOG, Font.BOLD, 60));
+        outcomeLabel.setOpaque(false);
+        outcomeLabel.setForeground(Color.RED);
+        outcomeLabel.setBounds(0, 50, 300, 200);
+        outcomeLabel.setHorizontalAlignment(JLabel.CENTER);
+        panel05.add(outcomeLabel);
         
+        panel05.add(gp);
+       
      // 対局成績表示
         JPanel panel06 = new JPanel();
         panel06.setLayout(null);
@@ -370,7 +394,7 @@ public class Client extends JFrame implements ActionListener{
         button12.setBounds(0, 350, 300, 50);
         button12.setBackground(Color.BLACK);
         button12.setForeground(Color.WHITE);
-        button12.setActionCommand("I");
+        button12.setActionCommand("BackUserPage");
         button12.addActionListener(this);
         panel06.add(button12);
         
@@ -413,40 +437,40 @@ public class Client extends JFrame implements ActionListener{
         Container contentPane = getContentPane();
         contentPane.add(cardPanel, BorderLayout.CENTER);
         
-        tm = new Timer(3000, this);
-        tm.setActionCommand("timer");
-        
-        
+        tm2 = new Timer(5000, this);
+        tm2.setActionCommand("GameEnd");
+        tm2.setRepeats(false);
+       
     }
     
     
     public void actionPerformed(ActionEvent e) {
+    	
     	try {
     	int locate_x,locate_y;
-    	String cmd_enemy;
-    	//JButton b = (JButton) e.getSource(); 
+    	 
         String cmd = e.getActionCommand();
         ID = id_input.getText();
         
         switch(cmd) {
-        case "A":
+        case "LoginPage":
         	if(authentication(id_input.getText(),pw_input.getText())) {
-        		uh_mes.setText("ようこそ"+ID+"さん");
+        		uh_mes.setText("ようこそ "+ID+"さん");
         		layout.show(cardPanel, "4");
         	}else {
         		aut_mes.setText("IDまたはパスワードにエラーがあります");
     			layout.show(cardPanel, "1");
         	}
         	break;
-        case "B":
+        case "NewAccountPage":
         	layout.show(cardPanel, "2");
             break;
         	
-        case "C":
+        case "ForgetPassword":
         	layout.show(cardPanel, "3");
             break;
         	
-        case "D":
+        case "MakeAccount":
         	if(reset(id_new_input.getText(),pw_new_input.getText(),Q_sec_input.getText())) {
         		layout.show(cardPanel, "1");
         	}else {
@@ -455,7 +479,7 @@ public class Client extends JFrame implements ActionListener{
         	}
             break;
         	
-        case "E":
+        case "ResetPassword":
         	if(re_authentication(id_renew_input.getText(),sq_input.getText())) {
         		layout.show(cardPanel, "7");
         	}else {
@@ -463,155 +487,132 @@ public class Client extends JFrame implements ActionListener{
         		layout.show(cardPanel, "3");
         	}
             break;
+            
+        case "BackHome":
+        	layout.show(cardPanel, "1");
         	
-        case "F":   //first:先攻  rear:後攻
-        	String atk = search();
-        	layout.show(cardPanel, "5");
-        
-        	if(atk.equals(Othello.FIRST)) {
-        		// othelloに手番情報を伝達
-        		othello.setColor(Othello.BRACK, Othello.WHITE);
-        		othello.judge();
-        		// 画面を更新
-        		updateBoard(othello.getBoardState());
-        		turn.setText("あなたの番です");
-        		button11.setEnabled(true);
-        		squareChange(true, othello.getBoardState());
-        	}else {
-        		// othelloに手番情報を伝達
-        		othello.setColor(Othello.WHITE, Othello.BRACK);
-        		// 画面を更新
-        		turn.setText("相手の番です");
-        		button11.setEnabled(false);
-        		
-        		// 相手の操作情報を受信
-        		//cmd_enemy = input.nextLine();
-        		cmd_enemy = "";
-        		if(cmd_enemy.equals(Othello.RETIRE)) {
-            		layout.show(cardPanel, "4");
-            	}
-        		else {
-        			// ボタンの位置情報への変換
-	        	    locate_x = Integer.parseInt(cmd_enemy)/10;
-	            	locate_y = Integer.parseInt(cmd_enemy)%10;
-	            	// 石の反転
-	            	othello.reverse(Othello.WHITE,locate_x,locate_y);
-	            	// 画面を更新
-	            	layout.show(cardPanel, "5");
-	            	othello.judge();
-	        		updateBoard(othello.getBoardState());
-	        		turn.setText("あなたの番です");
-	        		squareChange(true, othello.getBoardState());
-        		}	
-        		
-        	}
-            break;
-        	
-        case "G":
+        	break;
+        	    
+        case "CheckRecord":
         	result();
         	layout.show(cardPanel, "6");
             break;
-        	
-        case "H":
-        	//output.println("retire");
+            
+        case "BackUserPage":
         	layout.show(cardPanel, "4");
             break;
             
-        case "I":
-        	layout.show(cardPanel, "4");
-            break;
-            
-        case "J":
-        	layout.show(cardPanel, "1");
-        	break;
+        	    	
+        case "START":   //first:先攻  rear:後攻
         	
-        case "PATH":
-        	output.println(cmd);
-        	output.flush();
-        	cmd_enemy = input.nextLine();
-    		readServer(cmd_enemy);
-    		break;
+        	String atk = search();
         	
-            
-        default:
-        	if( e.getSource() == tm ) {
-        		cmd_enemy = input.nextLine();
-        		readServer(cmd_enemy);
-        		tm.stop();
-        	}else {
-        		
-            	// ボタンの位置情報への変換
-            	locate_x = Integer.parseInt(cmd)/10;
-            	locate_y = Integer.parseInt(cmd)%10;
-            	// 石の反転
-                othello.reverse(othello.getMyColor(),locate_x,locate_y);
-                // 画面を更新
-            	layout.show(cardPanel, "5");
-            	updateBoard(othello.getBoardState());
-            	button11.setEnabled(false);
-            	squareChange(false, othello.getBoardState());
+            layout.show(cardPanel, "5");
+            // 手番情報の判定
+            if(atk.equals(Othello.FIRST)) {
+            	// othelloに手番情報を伝達
+            	othello.setColor(Othello.BRACK, Othello.WHITE);
+            	othello.judge(othello.getMyColor());
+            	// 画面を更新
+            	updateBoard(othello.getMyColor());	
+            }else {
+            	// othelloに手番情報を伝達
+            	othello.setColor(Othello.WHITE, Othello.BRACK);
+            	// 画面を更新
             	turn.setText("相手の番です");
             	
-            	// サーバに操作情報を送信
-            	output.println(cmd);
-            	output.flush();
-            	
-            	// サーバから操作情報を受信
-            	//cmd_enemy = input.nextLine();
-            	tm.start();
+            	// 相手のターン
+            	//(new SaThread(frame, othello, input)).start();	
+            	gameComThread = new SaThread(frame, othello, input);
+            	gameComThread.start();
+            }
+            
+            break;
+            
+        
+        case Othello.RETIRE:
+        	
+        	//output.println("retire");
+        	sendToOutcome(Othello.RETIRE);
+        	outcomeLabel.setText(Othello.LOSE);
+        	tm2.start();
+            break;
+            
+            
+        case Othello.PASS:
+        	// 相手がパスした直後かを判定
+        	if( othello.getPassCheck() ) {
+        		// パスした直後であればパスした旨と勝敗判定をサーバに送信
+        		sendToCoordinate(cmd);
+        		sendToOutcome(othello.getOutcome());
+        		// 勝敗メッセージを表示
+            	outcomeLabel.setText(othello.getOutcome());
+            	// ユーザが勝敗メッセージを確認するための遅延を入れて画面遷移
+            	tm2.start();
+        	}else {
+        		// パスしたことを記録
+        		othello.setPassCheck(true);
+        		// パスした旨をサーバに送信
+            	sendToCoordinate(Othello.PASS);
+            	// 画面を更新
+            	updateBoard(othello.getEnemyColor());
+            	// 相手のターンの処理を開始
+            	//(new SaThread(frame, othello, input)).start();
+            	gameComThread = new SaThread(frame, othello, input);
+            	gameComThread.start();
         	}
+        	
+    		break;
+    		
+        case "GameEnd":
+        	tm2.stop();
+        	gameComThread.join();
+        	othello.boardClear();
+        	squareClear();
+        	layout.show(cardPanel, "4");
+        	break;
+    		
+    	default:
+    		
+    		// パスフラグをfalseにする
+    		othello.setPassCheck(false);
+    		// ボタンの位置情報への変換
+            locate_x = Integer.parseInt(cmd)/10;
+            locate_y = Integer.parseInt(cmd)%10;
+            // 石の反転
+            othello.reverse(othello.getMyColor(),locate_x,locate_y);
+            // 画面の更新
+            updateBoard(othello.getEnemyColor());
+            // 対局終了判定
+            if( othello.judge(othello.getEnemyColor()) < 0) {
+            	// 対局終了したらボタンの座標値と勝敗結果をサーバに送信
+            	sendToCoordinate(cmd);
+            	sendToOutcome(othello.getOutcome());
+            	// 勝敗メッセージを表示
+            	outcomeLabel.setText(othello.getOutcome());
+            	// ユーザが勝敗メッセージを確認するための遅延を入れて画面遷移
+            	tm2.start();
+            }else {
+            	//サーバに操作情報を送信
+                sendToCoordinate(cmd);
+                // 相手のターンの処理を開始
+                //(new SaThread(frame, othello, input)).start();
+                gameComThread = new SaThread(frame, othello, input);
+            	gameComThread.start();
+                
+            }
+            
         }
+        
     	}catch(NoSuchElementException e1) {
     		layout.show(cardPanel, "1");
+    	    
     		System.exit(0);
-    	}
-            	
-            	
-    }
-    
-    public void readServer(String cmd_enemy) {
-    	int locate_x;
-    	int locate_y;
-    
-    	if(cmd_enemy.equals(Othello.RETIRE)) {
-    		layout.show(cardPanel, "4");
-    	}else {
-        	if(cmd_enemy.equals(Othello.PASS)) {
-            	if(othello.judge() != 0) {
-            		layout.show(cardPanel, "5");
-            		turn.setText("あなたの番です");
-                	squareChange(true, othello.getBoardState());
-            			
-            	}else {
-            		turn.setText(othello.getOutcome());
-            		try {
-						TimeUnit.SECONDS.sleep(5);
-					} catch (InterruptedException e) {
-						// TODO 自動生成された catch ブロック
-						e.printStackTrace();
-					}
-            		layout.show(cardPanel, "4");
-            			
-            	}
-            		
-            }else {
-            	locate_x = Integer.parseInt(cmd_enemy)/10;
-                locate_y = Integer.parseInt(cmd_enemy)%10;
-                othello.reverse(othello.getEnemyColor(),locate_x,locate_y);
-                if( othello.judge() == 0 ) {
-                	button12.setEnabled(true);
-                }else {
-                	button12.setEnabled(false);
-                }
-                layout.show(cardPanel, "5");
-                turn.setText("あなたの番です");
-            	squareChange(true, othello.getBoardState());
-            	updateBoard(othello.getBoardState());   	
-                	
-            }
-        	
-    	}
-		
+    		
+    	} catch (InterruptedException e1) {
+			// TODO 自動生成された catch ブロック
+			e1.printStackTrace();
+		}   	
     }
     
     public boolean authentication(String ID, String PW) {
@@ -645,14 +646,14 @@ public class Client extends JFrame implements ActionListener{
     
     public void  result() {
     	//output.println("4");
-    	//int win = Integer.parseInt(input.nextLine());
-    	//int lose = Integer.parseInt(input.nextLine());
-    	//int cast = Integer.parseInt(input.nextLine());
-    	double late = (double)win/lose;
+    	int win = Integer.parseInt(input.nextLine());
+    	int lose = Integer.parseInt(input.nextLine());
+    	int cast = Integer.parseInt(input.nextLine());
+    	double late = (double)win/(win+lose+cast);
     	label_win.setText("勝ち数  "+win);
     	label_lose.setText("負け数  "+lose);
     	label_cast.setText("投了数  "+cast);
-    	label_late.setText("勝率  "+late+"%");
+    	label_late.setText("勝率  "+late+" %");
     }
     
     public boolean re_authentication(String ID, String Q_sec) {
@@ -663,91 +664,182 @@ public class Client extends JFrame implements ActionListener{
     	return response.equals("1");
     }
     
-    public void updateBoard(int[][] boardState) {
-    	for(int i = 1; i < boardState.length-1; i++) {
-    		for(int j = 1; j < boardState[i].length-1; j++) {
-    			if(boardState[i][j] == Othello.BRACK) {
-    				square[i-1][j-1].setBackground(Color.GREEN);
-    				square[i-1][j-1].setIcon(brackStone);
-    			}else if(boardState[i][j] == Othello.WHITE) {
-    				square[i-1][j-1].setBackground(Color.GREEN);
-    				square[i-1][j-1].setIcon(whiteStone);
-    			}else if(boardState[i][j] == Othello.EMPTY) {
-    				square[i-1][j-1].setBackground(Color.GREEN);
-    			}else if(boardState[i][j] == Othello.OK) {
-    				square[i-1][j-1].setBackground(Color.RED);
-    			}
+    public void updateBoard(int nextTurn) {
+    	int[][] boardState = othello.getBoardState();
+    	boolean flag = false;
+    	
+    	if(nextTurn == othello.getMyColor()) {
+    		flag = true;
+    	}
+    	
+	    for(int i = 1; i < boardState.length-1; i++) {
+	    	for(int j = 1; j < boardState[i].length-1; j++) {
+	    		if(boardState[i][j] == Othello.BRACK) {
+	    			//square[i-1][j-1].setBackground(Color.GREEN);
+	    			square[i-1][j-1].setIcon(brackStone);
+	    			square[i-1][j-1].setEnabled(false);
+	    		}else if(boardState[i][j] == Othello.WHITE) {
+	    			//square[i-1][j-1].setBackground(Color.GREEN);
+	    			square[i-1][j-1].setIcon(whiteStone);
+	    			square[i-1][j-1].setEnabled(false);
+	    		}else if(boardState[i][j] == Othello.EMPTY) {
+	    			//square[i-1][j-1].setBackground(Color.GREEN);
+	    			square[i-1][j-1].setIcon(defaultIcon);
+	    			square[i-1][j-1].setEnabled(false);
+	    		}else if(boardState[i][j] == Othello.OK) {
+	    			//square[i-1][j-1].setBackground(Color.RED);
+	    			square[i-1][j-1].setIcon(redIcon);
+	    			square[i-1][j-1].setEnabled(flag);
+	    		}
+	    	}
+	    }
+    	
+    	
+    	if(nextTurn == othello.getMyColor()) {
+    		turn.setText("あなたの番です");
+        	button11.setEnabled(true);
+        	
+    	}else if(nextTurn == othello.getEnemyColor()) {
+    		turn.setText("相手の番です");
+        	button11.setEnabled(false);
+        	button12.setEnabled(false);
+        	
+    	}
+    			
+    }
+    
+    public void sendToOutcome(String message) {
+    	if(message.equals(Othello.RETIRE)|| message.equals(Othello.LOSE) || message.equals(Othello.WIN) || message.equals(Othello.DRAW)){
+    		output.println(message);
+        	output.flush();
+        	//output.println(ID);
+        	//output.flush();
+        	//output.println(Othello.LOSE);
+        	//output.flush();
+    	}
+    }
+    
+    public void sendToCoordinate(String cmd) {
+    	output.println(cmd);
+    	output.flush();
+    }
+    
+    public void enemyProcess(String cmd_enemy) throws InterruptedException,NoSuchElementException{
+    	int locate_x;
+    	int locate_y;
+    	int judgeCount;
+    
+    	if(cmd_enemy.equals(Othello.RETIRE)) {
+    		outcomeLabel.setText(Othello.WIN);
+    		tm2.start();
+    		
+    	}else if(cmd_enemy.equals(Othello.PASS)) {
+    		if( othello.getPassCheck() ) {
+            	sendToOutcome(othello.getOutcome());
+            	outcomeLabel.setText(othello.getOutcome());
+            	tm2.start();
+    		}else {
+    			othello.setPassCheck(true);
+    			judgeCount = othello.judge(othello.getMyColor());
+    			if(judgeCount == 0) {
+        			turn.setText("相手がパスしました。あなたの打てる手はありません。");
+        			button11.setEnabled(true);
+        			button12.setEnabled(true);
+        		}else {
+        			updateBoard(othello.getMyColor());
+        		}
+    		}
+    		
+    	}else if( cmd_enemy == "ConnectError") {
+    		outcomeLabel.setText("Down");
+    		tm2.start();
+    		
+    	}else {
+    		othello.setPassCheck(false);
+    		//　座標変換
+    		locate_x = Integer.parseInt(cmd_enemy)/10;
+            locate_y = Integer.parseInt(cmd_enemy)%10;
+            // 石の反転
+            othello.reverse(othello.getEnemyColor(),locate_x,locate_y);
+            judgeCount = othello.judge(othello.getMyColor());
+            if( judgeCount == 0 ) {
+            	button12.setEnabled(true);
+            	updateBoard(othello.getMyColor());
+            }else if( judgeCount < 0 ){
+            	updateBoard(othello.getMyColor());
+            	sendToOutcome(othello.getOutcome());
+            	outcomeLabel.setText(othello.getOutcome());
+            	tm2.start();
+            }else {
+            	updateBoard(othello.getMyColor());
+            }
+        	
+    	}
+    		
+    }
+    
+    public void squareClear() {
+    	for(int i = 0; i < square.length; i++) {
+    		for(int j = 0; j < square.length; j++) {
+    			square[i][j].setIcon(defaultIcon);
+    			square[i][j].setEnabled(false);
     		}
     	}
+    	
+    	square[3][3].setIcon(whiteStone);
+        square[4][4].setIcon(whiteStone);
+        square[3][4].setIcon(brackStone);
+        square[4][3].setIcon(brackStone);
+    	
+        
+        button11.setEnabled(false);
+        button12.setEnabled(false);
+        
+        turn.setText("");
+        outcomeLabel.setText("");
+    	
+    	
     }
+   
     
-    public void squareChange(boolean flag, int[][] board) {
-    	if( !flag ) {
-	    	for(int i = 0; i < square.length; i++) {
-	    		for(int j = 0; j < square[i].length; j++) {
-	    			square[i][j].setEnabled(flag);
-	    		}
-	    	}
-    	}else {
-    		for(int i = 0; i < square.length; i++) {
-	    		for(int j = 0; j < square[i].length; j++) {
-	    			if( board[i+1][j+1] == Othello.OK ) {
-	    				square[i][j].setEnabled(flag);
-	    			}
-	    		}
-	    	}
-    	}
-	    	
-    }
-    
-    
-}
-    
-    
-class Mul extends Thread {
-    static int n = 1, m = 1;
-    //String server = "127.0.0.1";
-    //int port;
-    Client frame = new Client("BorderLayoutDemo");
-    //Socket socket;
-    //PrintWriter output;
-    //Scanner input;
-    public void run() {
-        try {
-        	//socket = new Socket("127.0.0.1", 3838);
-            //output = new PrintWriter(socket.getOutputStream());
-        	//input = new Scanner(socket.getInputStream());
-            frame.setTitle("Othello");
-            frame.setSize(310, 485);
-            frame.setLocationRelativeTo(null);
-            //frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
-            frame.setVisible(true);
-        }
-        catch(Exception ex) {
-            ex.printStackTrace();
-        }
-    }
 }
 
-class Add extends Thread {
-	static int n = 0, m = 1;
-
-    public void run() {
-        try {
-            while(m<=10) {
-                Thread.sleep(1000); 
-            	n = n + m;
-            	m++;
-                //System.out.println("Add : "+n);
-            }
-        }
-        catch(Exception ex) {
-            ex.printStackTrace();
-        }
-        finally {
-        }
-    }
+class SaThread extends Thread {
+	Client client;
+	Othello othello;
+	CardLayout layout;
+	JPanel cardPanel;
+	String message;
+	Scanner accept;
+	
+	SaThread(Client frame, Othello othello, Scanner accept){
+		client = frame;
+		this.othello = othello;
+		
+		this.accept = accept;
+	}
+	
+	
+	public void run() {
+		try {
+			message = accept.nextLine();
+			
+			
+				
+			client.enemyProcess(message);
+		} catch (InterruptedException e) {
+				// TODO 自動生成された catch ブロック
+				
+				e.printStackTrace();
+		}catch (NoSuchElementException e1) {
+				System.exit(0);
+		}
+	}
+	
+	
+	
 }
+    
 
 
 class Othello{
@@ -755,20 +847,22 @@ class Othello{
 	public static final int BRACK = 1;
 	public static final int WHITE = 0;
 	public static final int EMPTY = 2;
-	public static final int OUTER = -1;
-	public static final int OK = -2;
+	private static final int OUTER = -1;
+	public static final int OK = 3;
 	public static final String FIRST = "first";
 	public static final String REAR = "rear";
 	public static final String RETIRE = "retire";
 	public static final String PASS = "pass";
-	public static final String WIN = "勝ち";
-	public static final String LOSE = "負け";
-	public static final String DRAW = "引き分け";
+	public static final String WIN = "win";
+	public static final String LOSE = "lose";
+	public static final String DRAW = "draw";
 	
-	int[][] board = new int[10][10];
-	int myColor;
-	int enemyColor;
-	int judgeResult = 0;
+	private int[][] board = new int[10][10];
+	private int myColor;
+	private int enemyColor;
+	private boolean passCheck = false;
+	private int[] di = {-1, -1, 0, 1, 1,  1,  0, -1};
+	private int[] dj = { 0,  1, 1, 1, 0, -1, -1, -1};
 	
 	Othello(){
 		boardClear();
@@ -776,15 +870,7 @@ class Othello{
 	
 	public void setColor(int myColor, int enemyColor) {
 		this.myColor = myColor;
-		this.enemyColor = enemyColor;
-	}
-	
-	public int getMyColor() {
-		return myColor;
-	}
-	
-	public int getEnemyColor() {
-		return enemyColor;
+		this.enemyColor = enemyColor;	
 	}
 	
 	public void boardClear() {
@@ -806,12 +892,19 @@ class Othello{
 	public int[][] getBoardState() {
 		return board;
 	}
+	
+	public int getMyColor() {
+		return myColor;
+	}
+	
+	public int getEnemyColor() {
+		return enemyColor;
+	}
 
 	
 	public void reverse(int color, int i, int j) {
 		System.out.print(i + ", " + j);
     	System.out.println();
-    	
     	
     	if(color+board[i+1][j] == 1) {
     		int xy = 2;
@@ -928,117 +1021,51 @@ class Othello{
 	}
 
 	
-	public int judge() {
+	public int judge(int nextColor) {
+		int judgeResult = 0;
+		boolean checkEmpty = false;
+		int nextI;
+		int nextJ;
+		
+		
     	for(int i = 1; i < board.length-1; i++) {
     		for(int j = 1; j < board.length-1; j++) {
-    	    	if(board[i][j] == 2) {
-    	    		if(myColor+board[i+1][j] == 1) {
-        	    		int xy = 2;
-        	    		while(board[i+xy][j] != -1) {
-        	    			if(myColor == board[i+xy][j]) {
-        	    				board[i][j] = OK;
-        	    				judgeResult++;
-        	    				break;
-        	    			}
-        	    			xy++;
-        	    		}
-        	    		
-        	    	}
-                    
-        	    	if(myColor+board[i-1][j] == 1) {
-        	    		int xy = 2;
-        	    		while(board[i-xy][j] != -1) {
-        	    			if(myColor == board[i-xy][j]) {
-        	    				board[i][j] = OK;
-        	    				judgeResult++;
-        	    				break;
-        	    			}
-        	    			xy++;
-        	    		}
-        	    	}
-        	    	
-                    if(myColor+board[i][j+1] == 1) {
-                    	int xy = 2;
-        	    		while(board[i][j+xy] != -1) {
-        	    			if(myColor == board[i][j+xy]) {
-        	    				board[i][j] = OK;
-        	    				judgeResult++;
-        	    				break;
-        	    			}
-        	    			xy++;
-        	    		}
-        	    	}
-                    
-                    if(myColor+board[i][j-1] == 1) {
-                    	int xy = 2;
-        	    		while(board[i][j-xy] != -1) {
-        	    			if(myColor == board[i][j-xy]) {
-        	    				board[i][j] = OK;
-        	    				judgeResult++;
-        	    				break;
-        	    			}
-        	    			xy++;
-        	    		}
-        	    	}
-                    
-                    if(myColor+board[i+1][j+1] == 1) {
-                    	int xy = 2;
-        	    		while(board[i+xy][j+xy] != -1) {
-        	    			if(myColor == board[i+xy][j+xy]) {
-        	    				board[i][j] = OK;
-        	    				judgeResult++;
-        	    				break;
-        	    			}
-        	    			xy++;
-        	    		}
-        	    	}
-                    
-                    if(myColor+board[i+1][j-1] == 1) {
-                    	int xy = 2;
-        	    		while(board[i+xy][j-xy] != -1) {
-        	    			if(myColor == board[i+xy][j-xy]) {
-        	    				board[i][j] = OK;
-        	    				judgeResult++;
-        	    				break;
-        	    			}
-        	    			xy++;
-        	    		}
-        	    	}
-                    
-                    if(myColor+board[i-1][j+1] == 1) {
-                    	int xy = 2;
-        	    		while(board[i-xy][j+xy] != -1) {
-        	    			if(myColor == board[i-xy][j+xy]) {
-        	    				board[i][j] = OK;
-        	    				judgeResult++;
-        	    				break;
-        	    			}
-        	    			xy++;
-        	    		}
-        	    	}
-                    
-                    if(myColor+board[i-1][j-1] == 1) {
-                    	int xy = 2;
-        	    		while(board[i-xy][j-xy] != -1) {
-        	    			if(myColor == board[i-xy][j-xy]) {
-        	    				board[i][j] = OK;
-        	    				judgeResult++;
-        	    				break;
-        	    			}
-        	    			xy++;
-        	    		}
-    	    		}
-    	    	}
+    			if(board[i][j] == EMPTY) {
+    				checkEmpty=true;
+    				if(nextColor == myColor) {
+    				for(int k = 0; k < 8; k++) {
+    					nextI = i + di[k];
+    					nextJ = j + dj[k];
+    					if( myColor+board[nextI][nextJ] == 1) {
+    						nextI += di[k];
+    						nextJ += dj[k];
+    						while(myColor+board[nextI][nextJ] == 1) {
+        						nextI += di[k];
+        						nextJ += dj[k];
+        					}
+        					if(myColor == board[nextI][nextJ]) {
+        						board[i][j] = OK;
+        						judgeResult++;
+        					}
+    					}
+    					
+    				}
+    				}else {
+    					break;
+    				}
+    			}
+    	    		
+    	    	
             }	
         }
     	
-    	return judgeResult;
+    	if( !checkEmpty ) {
+    		return -10;
+    	}else {
+    		return judgeResult;
+    	}
     	
-	}
-	
-	
-	public int getJudgeResult() {
-		return judgeResult;
+    	
 	}
 	
 	public void redMarkClear() {
@@ -1077,13 +1104,22 @@ class Othello{
 		return outcome;
 	}
 	
-		
+	public boolean getPassCheck() {
+		return passCheck;
+	}
+	
+	public void setPassCheck(boolean passCheck) {
+		this.passCheck = passCheck;
+	}
+	
 }
 
 class WhiteStone implements Icon{
 	
 	@Override
 	public void paintIcon(Component c, Graphics g, int x, int y) {
+		g.setColor(Color.GREEN);
+		g.fillRect(0, 0, 31, 31);
 		g.setColor(Color.WHITE);
 		g.fillOval(1, 1, 28, 28);
 		
@@ -1106,6 +1142,8 @@ class BrackStone implements Icon{
 
 	@Override
 	public void paintIcon(Component c, Graphics g, int x, int y) {
+		g.setColor(Color.GREEN);
+		g.fillRect(0, 0, 31, 31);
 		g.setColor(Color.BLACK);
 		g.fillOval(1, 1, 28, 28);
 		
@@ -1119,6 +1157,50 @@ class BrackStone implements Icon{
 	@Override
 	public int getIconHeight() {
 		return 28;
+	}
+	
+}
+
+class DefaultIcon implements Icon{
+
+	@Override
+	public void paintIcon(Component c, Graphics g, int x, int y) {
+		g.setColor(Color.GREEN);
+		g.fillRect(0, 0, 31, 31);
+	}
+
+	@Override
+	public int getIconWidth() {
+		// TODO 自動生成されたメソッド・スタブ
+		return 0;
+	}
+
+	@Override
+	public int getIconHeight() {
+		// TODO 自動生成されたメソッド・スタブ
+		return 0;
+	}
+	
+}
+
+class RedIcon implements Icon{
+
+	@Override
+	public void paintIcon(Component c, Graphics g, int x, int y) {
+		g.setColor(Color.RED);
+		g.fillRect(0, 0, 31, 31);
+	}
+
+	@Override
+	public int getIconWidth() {
+		// TODO 自動生成されたメソッド・スタブ
+		return 0;
+	}
+
+	@Override
+	public int getIconHeight() {
+		// TODO 自動生成されたメソッド・スタブ
+		return 0;
 	}
 	
 }
