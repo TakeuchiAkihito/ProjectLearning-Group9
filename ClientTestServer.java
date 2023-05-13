@@ -48,16 +48,19 @@ public class ClientTestServer {
             System.out.println("2台接続完了");
             Scanner input1 = new Scanner(socket1.getInputStream());
             PrintWriter output1 = new PrintWriter(socket1.getOutputStream());
-            Scanner input2 = new Scanner(socket2.getInputStream());
-            PrintWriter output2 = new PrintWriter(socket2.getOutputStream());
+            
             
             System.out.println(input1.nextLine());
             System.out.println(input1.nextLine());
-            System.out.println(input2.nextLine());
-            System.out.println(input2.nextLine());
-            
+
             output1.println("1");
             output1.flush();
+
+            Scanner input2 = new Scanner(socket2.getInputStream());
+            PrintWriter output2 = new PrintWriter(socket2.getOutputStream());
+            System.out.println(input2.nextLine());
+            System.out.println(input2.nextLine());
+            
             
             output2.println("1");
             output2.flush();
