@@ -38,7 +38,7 @@ public class ClientTestServer {
             
             
             String cmd1, cmd2;
-            //String name1, name2;
+            String name1, name2;
             //boolean gameEnd = false;
             //boolean trun = true;
             
@@ -46,22 +46,20 @@ public class ClientTestServer {
             Socket socket1 = server1.accept();
             Socket socket2 = server2.accept();
             System.out.println("2台接続完了");
+            
             Scanner input1 = new Scanner(socket1.getInputStream());
             PrintWriter output1 = new PrintWriter(socket1.getOutputStream());
-            
-            
+            name1 = input1.nextLine();
+            System.out.println(name1);
             System.out.println(input1.nextLine());
-            System.out.println(input1.nextLine());
-
             output1.println("1");
             output1.flush();
 
             Scanner input2 = new Scanner(socket2.getInputStream());
             PrintWriter output2 = new PrintWriter(socket2.getOutputStream());
+            name2 = input2.nextLine();
+            System.out.println(name2);
             System.out.println(input2.nextLine());
-            System.out.println(input2.nextLine());
-            
-            
             output2.println("1");
             output2.flush();
             
@@ -74,7 +72,11 @@ public class ClientTestServer {
                 
                 output1.println(Set.FIRST);
                 output1.flush();
+                output1.println(name2);
+                output1.flush();
                 output2.println(Set.REAR);
+                output2.flush();
+                output2.println(name1);
                 output2.flush();
                 System.out.println("対局開始");
                 
@@ -156,54 +158,7 @@ public class ClientTestServer {
         }
     	
     }
-/*    
-    public static synchronized void send() {
-    	
-    }
-}
 
-class ServerThread extends Thread{
-	Scanner input;
-	PrintWriter output;
-	String cmd;
-	
-	ServerThread(Scanner input, PrintWriter output){
-		this.input = input;
-		this.output = output;
-	}
-	
-	public void run() {
-		 while(true){
-             System.out.print(input.nextLine());
-             System.out.print(input.nextLine());
-             output.println("1");
-             output.flush();
-             
-             if(input.nextLine()=="c1") {
-            	 output.println("first");
-                 output.flush();
-             }else {
-            	 output.println("rear");
-                 output.flush();
-             }
-             
-             
-             cmd = input.nextLine();
-             output.println("46");
-             output.flush();
-             
-             input.nextLine();
-             output.println("43");
-             output.flush();
-             
-             input.nextLine();
-             output.println("retire");
-             output.flush();
-             
-             output.close();     // PrintWriterはclose()で閉じるのが基本
-             socket.close();     // Socketはclose()で閉じるのが基本
-         }
-	}*/
 }
 
 class Set{

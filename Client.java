@@ -41,9 +41,10 @@ public class Client extends JFrame implements ActionListener{
     JLabel label_win;
     JLabel label_lose;
     JLabel label_cast;
+    JLabel enemyLabel;
     JTextField id_renew_input ;
     JTextField sq_input;
-    JTextField pw_input;
+    JPasswordField pw_input;
     JTextField id_new_input;
     JTextField pw_new_input;
     JTextField Q_sec_input;
@@ -59,8 +60,6 @@ public class Client extends JFrame implements ActionListener{
     Timer tm2;
     SaThread gameComThread;
    
-    
-    
     static Socket socket;
     static PrintWriter output;
     static Scanner input;
@@ -132,7 +131,7 @@ public class Client extends JFrame implements ActionListener{
         pw.setBounds(10, 150, 300, 80);
         panel01.add(pw);
         
-        pw_input = new JTextField(16);
+        pw_input = new JPasswordField(16);
         pw_input.setBounds(170, 175, 120, 30);
         panel01.add(pw_input);
         
@@ -327,9 +326,9 @@ public class Client extends JFrame implements ActionListener{
         turn.setBounds(110, 245, 300, 80);
         panel05.add(turn);
         
-        JLabel enemy = new JLabel("対戦相手 : "+name_enemy);
-        enemy.setBounds(110, 280, 300, 80);
-        panel05.add(enemy);
+        enemyLabel = new JLabel("対戦相手 : "+name_enemy);
+        enemyLabel.setBounds(110, 280, 300, 80);
+        panel05.add(enemyLabel);
         
         button11 = new JButton("投了する");
         button11.setBounds(0, 400, 300, 50);
@@ -448,13 +447,13 @@ public class Client extends JFrame implements ActionListener{
     	
     	try {
     	int locate_x,locate_y;
-    	 
         String cmd = e.getActionCommand();
         ID = id_input.getText();
+        String outcome;
         
         switch(cmd) {
         case "LoginPage":
-        	if(authentication(id_input.getText(),pw_input.getText())) {
+        	if(authentication(id_input.getText(),String.valueOf(pw_input.getPassword()))) {
         		uh_mes.setText("ようこそ "+ID+"さん");
         		layout.show(cardPanel, "4");
         	}else {
@@ -534,7 +533,8 @@ public class Client extends JFrame implements ActionListener{
         	
         	//output.println("retire");
         	sendToOutcome(Othello.RETIRE);
-        	outcomeLabel.setText(Othello.LOSE);
+        	outcomeLabel.setForeground(Color.BLUE);
+        	outcomeLabel.setText("敗北");
         	tm2.start();
             break;
             
@@ -543,10 +543,20 @@ public class Client extends JFrame implements ActionListener{
         	// 相手がパスした直後かを判定
         	if( othello.getPassCheck() ) {
         		// パスした直後であればパスした旨と勝敗判定をサーバに送信
+        		outcome = othello.getOutcome();
         		sendToCoordinate(cmd);
-        		sendToOutcome(othello.getOutcome());
+        		sendToOutcome(outcome);
         		// 勝敗メッセージを表示
-            	outcomeLabel.setText(othello.getOutcome());
+        		if( outcome.equals(Othello.WIN)) {
+            		outcomeLabel.setForeground(Color.RED);
+            		outcomeLabel.setText("勝利");
+            	}else if( outcome.equals(Othello.LOSE) ) {
+            		outcomeLabel.setForeground(Color.BLUE);
+            		outcomeLabel.setText("敗北");
+            	}else {
+            		outcomeLabel.setForeground(Color.RED);
+            		outcomeLabel.setText("引き分け");
+            	}
             	// ユーザが勝敗メッセージを確認するための遅延を入れて画面遷移
             	tm2.start();
         	}else {
@@ -585,11 +595,21 @@ public class Client extends JFrame implements ActionListener{
             updateBoard(othello.getEnemyColor());
             // 対局終了判定
             if( othello.judge(othello.getEnemyColor()) < 0) {
+            	outcome = othello.getOutcome();
             	// 対局終了したらボタンの座標値と勝敗結果をサーバに送信
             	sendToCoordinate(cmd);
             	sendToOutcome(othello.getOutcome());
             	// 勝敗メッセージを表示
-            	outcomeLabel.setText(othello.getOutcome());
+            	if( outcome.equals(Othello.WIN)) {
+            		outcomeLabel.setForeground(Color.RED);
+            		outcomeLabel.setText("勝利");
+            	}else if( outcome.equals(Othello.LOSE) ) {
+            		outcomeLabel.setForeground(Color.BLUE);
+            		outcomeLabel.setText("敗北");
+            	}else {
+            		outcomeLabel.setForeground(Color.RED);
+            		outcomeLabel.setText("引き分け");
+            	}
             	// ユーザが勝敗メッセージを確認するための遅延を入れて画面遷移
             	tm2.start();
             }else {
@@ -641,6 +661,8 @@ public class Client extends JFrame implements ActionListener{
     	output.println(ID);
     	output.flush();
     	String response = input.nextLine();
+    	name_enemy = input.nextLine();
+    	enemyLabel.setText("対戦相手 : "+name_enemy);
     	return response;
     }
     
@@ -728,21 +750,33 @@ public class Client extends JFrame implements ActionListener{
     	int locate_x;
     	int locate_y;
     	int judgeCount;
+    	String outcome;
     
     	if(cmd_enemy.equals(Othello.RETIRE)) {
-    		outcomeLabel.setText(Othello.WIN);
+    		outcomeLabel.setForeground(Color.RED);
+    		outcomeLabel.setText("勝利");
     		tm2.start();
     		
     	}else if(cmd_enemy.equals(Othello.PASS)) {
     		if( othello.getPassCheck() ) {
-            	sendToOutcome(othello.getOutcome());
-            	outcomeLabel.setText(othello.getOutcome());
+    			outcome = othello.getOutcome();
+            	sendToOutcome(outcome);
+            	if( outcome.equals(Othello.WIN)) {
+            		outcomeLabel.setForeground(Color.RED);
+            		outcomeLabel.setText("勝利");
+            	}else if( outcome.equals(Othello.LOSE) ) {
+            		outcomeLabel.setForeground(Color.BLUE);
+            		outcomeLabel.setText("敗北");
+            	}else {
+            		outcomeLabel.setForeground(Color.RED);
+            		outcomeLabel.setText("引き分け");
+            	}
             	tm2.start();
     		}else {
     			othello.setPassCheck(true);
     			judgeCount = othello.judge(othello.getMyColor());
     			if(judgeCount == 0) {
-        			turn.setText("相手がパスしました。あなたの打てる手はありません。");
+        			turn.setText("あなたの番です");
         			button11.setEnabled(true);
         			button12.setEnabled(true);
         		}else {
@@ -751,7 +785,8 @@ public class Client extends JFrame implements ActionListener{
     		}
     		
     	}else if( cmd_enemy == "ConnectError") {
-    		outcomeLabel.setText("Down");
+    		outcomeLabel.setForeground(Color.RED);
+    		outcomeLabel.setText("勝利");
     		tm2.start();
     		
     	}else {
@@ -766,9 +801,19 @@ public class Client extends JFrame implements ActionListener{
             	button12.setEnabled(true);
             	updateBoard(othello.getMyColor());
             }else if( judgeCount < 0 ){
+            	outcome = othello.getOutcome();
             	updateBoard(othello.getMyColor());
-            	sendToOutcome(othello.getOutcome());
-            	outcomeLabel.setText(othello.getOutcome());
+            	sendToOutcome(outcome);
+            	if( outcome.equals(Othello.WIN)) {
+            		outcomeLabel.setForeground(Color.RED);
+            		outcomeLabel.setText("勝利");
+            	}else if( outcome.equals(Othello.LOSE) ) {
+            		outcomeLabel.setForeground(Color.BLUE);
+            		outcomeLabel.setText("敗北");
+            	}else {
+            		outcomeLabel.setForeground(Color.RED);
+            		outcomeLabel.setText("引き分け");
+            	}
             	tm2.start();
             }else {
             	updateBoard(othello.getMyColor());
