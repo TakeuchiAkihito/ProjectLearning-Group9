@@ -619,7 +619,7 @@ public class Client extends JFrame implements ActionListener{
     }
     
     public boolean authentication(String ID, String PW) {
-    	//output.println("1");
+    	output.println("1");
     	System.out.println(1);
     	output.println(ID);
     	output.flush();
@@ -635,7 +635,8 @@ public class Client extends JFrame implements ActionListener{
     	output.println(ID);
     	output.println(PW);
     	output.println(Q_sec);
-    	String response = input.nextLine();
+    	//String response = input.nextLine();
+    	String response = "1";
     	return response.equals("1");
     }
     
