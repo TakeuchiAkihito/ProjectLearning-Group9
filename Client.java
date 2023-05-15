@@ -66,27 +66,10 @@ public class Client extends JFrame implements ActionListener{
 	static Client frame;
 	
     public static void main(String[] args) {
-    	boolean portCheck = false;
-    	int port = 0;
     	
-    	while( !portCheck ) {
-	    	try {
-	    		
-	    		socket = new Socket("127.0.0.1", 3838);
-	    		input = new Scanner(socket.getInputStream());
-	    		portCheck = true;
-	    		port = Integer.parseInt(input.nextLine());
-	        	System.out.println(port);
-	    		socket.close();
-	            	
-	       }catch (Exception e) {
-	            e.printStackTrace();
-	            
-	       }
-       }
     	
     	try {
-			socket = new Socket("127.0.0.1", port);
+			socket = new Socket("127.0.0.1", 3838);
 			output = new PrintWriter(socket.getOutputStream());
     		input = new Scanner(socket.getInputStream());
     		
@@ -648,16 +631,16 @@ public class Client extends JFrame implements ActionListener{
     }
     
     public boolean reset(String ID, String PW, String Q_sec) {
-    	//output.println("2");
-    	//output.println(ID);
-    	//output.println(PW);
-    	//output.println(Q_sec);
-    	String response = "";//input.nextLine();
+    	output.println("2");
+    	output.println(ID);
+    	output.println(PW);
+    	output.println(Q_sec);
+    	String response = input.nextLine();
     	return response.equals("1");
     }
     
     public String  search() { //first:先攻  rear:後攻
-    	//output.println("3");
+    	output.println("3");
     	output.println(ID);
     	output.flush();
     	String response = input.nextLine();
@@ -667,7 +650,7 @@ public class Client extends JFrame implements ActionListener{
     }
     
     public void  result() {
-    	//output.println("4");
+    	output.println("4");
     	int win = Integer.parseInt(input.nextLine());
     	int lose = Integer.parseInt(input.nextLine());
     	int cast = Integer.parseInt(input.nextLine());
@@ -679,10 +662,10 @@ public class Client extends JFrame implements ActionListener{
     }
     
     public boolean re_authentication(String ID, String Q_sec) {
-    	//output.println("5");
-    	//output.println(ID);
-    	//output.println(Q_sec);
-    	String response = "";//input.nextLine();
+    	output.println("5");
+    	output.println(ID);
+    	output.println(Q_sec);
+    	String response = input.nextLine();
     	return response.equals("1");
     }
     
