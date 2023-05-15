@@ -620,21 +620,26 @@ public class Client extends JFrame implements ActionListener{
     
     public boolean authentication(String ID, String PW) {
     	output.println("1");
-    	System.out.println(1);
+    	output.flush();
+    	//System.out.println(1);
     	output.println(ID);
     	output.flush();
     	output.println(PW);
     	output.flush();
     	String response = input.nextLine();
     	System.out.println(response);
-    	return response.equals("1");
+    	return response.equals("Success");
     }
     
     public boolean reset(String ID, String PW, String Q_sec) {
     	output.println("2");
+    	output.flush();
     	output.println(ID);
+    	output.flush();
     	output.println(PW);
+    	output.flush();
     	output.println(Q_sec);
+    	output.flush();
     	//String response = input.nextLine();
     	String response = "1";
     	return response.equals("1");
@@ -642,6 +647,7 @@ public class Client extends JFrame implements ActionListener{
     
     public String  search() { //first:先攻  rear:後攻
     	output.println("3");
+    	output.flush();
     	output.println(ID);
     	output.flush();
     	String response = input.nextLine();
@@ -652,6 +658,7 @@ public class Client extends JFrame implements ActionListener{
     
     public void  result() {
     	output.println("4");
+    	output.flush();
     	int win = Integer.parseInt(input.nextLine());
     	int lose = Integer.parseInt(input.nextLine());
     	int cast = Integer.parseInt(input.nextLine());
@@ -667,7 +674,7 @@ public class Client extends JFrame implements ActionListener{
     	output.println(ID);
     	output.println(Q_sec);
     	String response = input.nextLine();
-    	return response.equals("1");
+    	return response.equals("Success");
     }
     
     public void updateBoard(int nextTurn) {
