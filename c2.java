@@ -684,7 +684,7 @@ public class J2 extends JFrame implements ActionListener{
     	label_lose.setText("負け数  "+lose);
     	label_draw.setText("引き分け数  "+draw);
     	label_cast.setText("投了数  "+cast);
-    	label_late.setText("勝率  "+late+" %");
+    	label_late.setText("勝率  "+String.format("%.1f", late)+" %");
     }
     
     public boolean re_authentication(String ID, String Q_sec) {
