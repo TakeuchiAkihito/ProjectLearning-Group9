@@ -59,6 +59,7 @@ public class CETS {
                 		if( idx.equals(id) && qx.equals(q)) {
                 			output.println("Success");
                 			output.flush();
+                			input.nextLine();
                 			pw = input.nextLine();
                 			System.out.println("新PW :" + pw);
                 			output.println("Success");
