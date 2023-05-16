@@ -37,13 +37,14 @@ class ServThread extends Thread{
 	
 	public void run() {
         Scanner input;
+        int this_acc=0;
 		try {
 			  input = new Scanner(socket.getInputStream());
 			  PrintWriter output = new PrintWriter(socket.getOutputStream());
 
 		        while(true) {
 		        	switch(input.nextInt()) {
-		        	case 1:
+		        	case 1://ログイン
 		        		Case1:{
 		        			input.nextLine();
 		        			for(int i=0;i<Server.num_account;i++) {
@@ -52,7 +53,8 @@ class ServThread extends Thread{
 			        				System.out.println("ok");
 			        				output.println("Success");
 			        				output.flush();
-			        				System.out.println("ID:"+Server.account[Server.num_account].ID+" PW:"+Server.account[Server.num_account].PW);
+			        				System.out.println("ID:"+Server.account[i].ID+" PW:"+Server.account[i].PW);
+			        				this_acc=i;
 			        				break Case1;
 			        			}		        			
 			        		}
@@ -60,7 +62,7 @@ class ServThread extends Thread{
 		        			break;
 		        		}
 		        		break;
-		        	case 2:
+		        	case 2://新規アカウント作成
 		        		input.nextLine();
 		        		System.out.println("ok");
 		        		if(Server.num_account<10000) {
@@ -75,9 +77,32 @@ class ServThread extends Thread{
 		        		}else {
 		        			output.println("0");
 		        		}break;
-		        	case 3:
-		        	case 4:
-		        	case 5:
+		        	case 3://対局
+		        	case 4://対局成績
+		        		int []this_record=new int[4];
+		        		this_record=Server.account[this_acc].get_record();
+		        		for(int i=0;i<4;i++) {
+		        			output.println(this_record[i]);
+		        			output.flush();
+		        		}
+		        	case 5://パスワード再設定
+		        		Case5:{
+		        			input.nextLine();
+		        			for(int i=0;i<Server.num_account;i++) {
+			        			if((Server.account[i].ID.equals(input.nextLine())) && (Server.account[i].Q_sec.equals(input.nextLine()))) {
+			        				System.out.println("ok");
+			        				output.println("Success");
+			        				output.flush();
+			        				System.out.println("ID:"+Server.account[i].ID+" Q_sec:"+Server.account[i].Q_sec);
+			        				this_acc=i;
+			        				break Case5;
+			        			}		        			
+			        		}
+		        			output.println("0");
+		        			break;
+		        		}
+		        		
+		        	case 6:
 		        	}
 		        	
 		        }
@@ -95,11 +120,12 @@ class Account{
 	String PW="null";
 	String Q_sec="null";
 	
-	static int []record=new int[3];
+	static int []record=new int[4];
 	Account(){
 		record[0]=0;//勝ち
 		record[1]=0;//負け
-		record[2]=0;//投了
+		record[2]=0;//引き分け
+		record[3]=0;//投了
 	}
 	
 	public void set_record(int result) {
