@@ -38,6 +38,9 @@ class ServThread extends Thread{
 	public void run() {
         Scanner input;
         int this_acc=0;
+        String this_id;
+		String this_pw;
+		String this_qsec;
 		try {
 			  input = new Scanner(socket.getInputStream());
 			  PrintWriter output = new PrintWriter(socket.getOutputStream());
@@ -47,9 +50,15 @@ class ServThread extends Thread{
 		        	case 1://ログイン
 		        		Case1:{
 		        			input.nextLine();
+		        			this_id=input.nextLine();
+		        			this_pw=input.nextLine();
+		        			if(Server.num_account==0) {
+		        				output.println("0");
+		        				break Case1;
+		        			}
 		        			for(int i=0;i<Server.num_account;i++) {
-		        				System.out.println("ID:"+Server.account[i].ID+" PW:"+Server.account[i].PW);
-			        			if((Server.account[i].ID.equals(input.nextLine())) && (Server.account[i].PW.equals(input.nextLine()))) {
+		        				
+			        			if((Server.account[i].ID.equals(this_id) && (Server.account[i].PW.equals(this_pw)))){
 			        				System.out.println("ok");
 			        				output.println("Success");
 			        				output.flush();
@@ -85,11 +94,17 @@ class ServThread extends Thread{
 		        			output.println(this_record[i]);
 		        			output.flush();
 		        		}
-		        	case 5://パスワード再設定
+		        	case 5://秘密の質問
 		        		Case5:{
 		        			input.nextLine();
+		        			this_id=input.nextLine();
+		        			this_qsec=input.nextLine();
+		        			if(Server.num_account==0) {
+		        				output.println("0");
+		        				break Case5;
+		        			}
 		        			for(int i=0;i<Server.num_account;i++) {
-			        			if((Server.account[i].ID.equals(input.nextLine())) && (Server.account[i].Q_sec.equals(input.nextLine()))) {
+			        			if((Server.account[i].ID.equals(this_id)) && (Server.account[i].Q_sec.equals(this_qsec))) {
 			        				System.out.println("ok");
 			        				output.println("Success");
 			        				output.flush();
@@ -102,7 +117,13 @@ class ServThread extends Thread{
 		        			break;
 		        		}
 		        		
-		        	case 6:
+		        	case 6://パスワード再設定
+		        		input.nextLine();
+		        		Server.account[this_acc].PW=input.nextLine();
+		        		output.println("Success");
+        				output.flush();
+        				System.out.println("ID:"+Server.account[this_acc].ID+" Q_sec:"+Server.account[this_acc].PW);
+        				break;
 		        	}
 		        	
 		        }
