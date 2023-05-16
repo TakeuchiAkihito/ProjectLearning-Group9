@@ -11,6 +11,9 @@ public class Server {
     public static int num_account=0;
     static ServerSocket serverS;
     public static void main(String[] args) {
+    	for(int i=0;i<10000;i++) {
+    		account[i]=new Account();
+    	}
         try{
             while(true){
                 System.out.println("サーバーは稼働しています。");
@@ -63,8 +66,8 @@ class ServThread extends Thread{
 		        			Server.account[Server.num_account].ID=input.nextLine();
 			        		Server.account[Server.num_account].PW=input.nextLine();
 			        		Server.account[Server.num_account].Q_sec=input.nextLine();
-			        		System.out.println(Server.account[Server.num_account].ID);
-			        		output.println("1");
+			        		System.out.println("ID:"+Server.account[Server.num_account].ID+" PW:"+Server.account[Server.num_account].PW+" Q_sec:"+Server.account[Server.num_account].Q_sec);
+			        		output.println("Success");
 		        		}else {
 		        			output.println("0");
 		        		}break;
@@ -84,16 +87,12 @@ class ServThread extends Thread{
 }
 
 class Account{
-	String ID;
-	String PW;
-	String Q_sec;
+	String ID="null";
+	String PW="null";
+	String Q_sec="null";
 	
 	static int []record=new int[3];
-	Account(String ID,String PW,String Q_sec){
-		this.ID=ID;
-		this.PW=PW;
-		this.Q_sec=Q_sec;
-		
+	Account(){
 		record[0]=0;//勝ち
 		record[1]=0;//負け
 		record[2]=0;//投了
