@@ -9,14 +9,13 @@ import java.util.Scanner;
 public class Server {
 	public static Account []account=new Account[10000];
     public static int num_account=0;
+    static ServerSocket serverS;
     public static void main(String[] args) {
         try{
-            ServerSocket server = new ServerSocket(3838, 5);
-            
-            
             while(true){
                 System.out.println("サーバーは稼働しています。");
-                Socket socket = server.accept();
+                serverS = new ServerSocket(3838);
+                Socket socket = serverS.accept();
                 new ServThread(socket).start();
                 
             }
@@ -38,6 +37,9 @@ class ServThread extends Thread{
 		try {
 			  input = new Scanner(socket.getInputStream());
 			  PrintWriter output = new PrintWriter(socket.getOutputStream());
+			  Integer port =Server.serverS.getLocalPort();
+			  output.println(port.toString());
+
 		        while(true) {
 		        	switch(input.nextInt()) {
 		        	case 1:
@@ -45,6 +47,7 @@ class ServThread extends Thread{
 		        			for(int i=0;i<Server.num_account;i++) {
 			        			if((Server.account[i].ID == input.nextLine()) && (Server.account[i].PW == input.nextLine())) {
 			        				output.println("1");
+			        				System.out.println(Server.account[i].ID);
 			        				break Case1;
 			        			}		        			
 			        		}
@@ -53,10 +56,14 @@ class ServThread extends Thread{
 		        		}
 		        		break;
 		        	case 2:
+		        		input.nextLine();
+		        		System.out.println("ok");
 		        		if(Server.num_account<10000) {
+		        			System.out.println();
 		        			Server.account[Server.num_account].ID=input.nextLine();
 			        		Server.account[Server.num_account].PW=input.nextLine();
 			        		Server.account[Server.num_account].Q_sec=input.nextLine();
+			        		System.out.println(Server.account[Server.num_account].ID);
 			        		output.println("1");
 		        		}else {
 		        			output.println("0");
