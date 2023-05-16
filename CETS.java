@@ -50,7 +50,7 @@ public class CETS {
                 		
                 		break;
                 		
-                	case "3":
+                	case "5":
                 		System.out.print(cmd);
                 		idx = input.nextLine();
                 		qx = input.nextLine();
@@ -69,6 +69,8 @@ public class CETS {
                 			output.println("Not");
                 			output.flush();
                 		}
+                		
+                		break;
                 		
                 	}
                 	
