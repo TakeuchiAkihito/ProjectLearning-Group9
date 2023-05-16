@@ -36,6 +36,7 @@ public class J2 extends JFrame implements ActionListener{
     Othello stone[][] = new Othello[10][10];
     JLabel uh_mes;
     JLabel aut_mes;
+    JLabel label6;
     JLabel turn;
     JLabel fault;
     JLabel fault2;
@@ -80,6 +81,7 @@ public class J2 extends JFrame implements ActionListener{
 			frame = new J2("BorderLayoutDemo");
 			frame.setTitle("Othello");
 	        frame.setSize(310, 485);
+	        frame.setResizable(false);
 	        frame.setLocationRelativeTo(null);
 	        frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
 	        frame.setVisible(true);
@@ -131,6 +133,7 @@ public class J2 extends JFrame implements ActionListener{
         panel01.add(pw_input);
         
         JButton button1 = new JButton("ログイン");
+        button1.setFont(f13);
         button1.setBounds(0, 220, 300, 50);
         button1.setBackground(Color.BLACK);
         button1.setForeground(Color.WHITE);
@@ -138,6 +141,7 @@ public class J2 extends JFrame implements ActionListener{
         button1.addActionListener(this);
 
         JButton button2 = new JButton("新規アカウント作成");
+        button2.setFont(f13);
         button2.setBounds(0, 350, 300, 50);
         button2.setBackground(Color.BLACK);
         button2.setForeground(Color.WHITE);
@@ -145,6 +149,7 @@ public class J2 extends JFrame implements ActionListener{
         button2.addActionListener(this);
 
         JButton button3 = new JButton("パスワードを忘れた");
+        button3.setFont(f13);
         button3.setBounds(0, 400, 300, 50);
         button3.setBackground(Color.BLACK);
         button3.setForeground(Color.WHITE);
@@ -195,6 +200,7 @@ public class J2 extends JFrame implements ActionListener{
         panel02.add(Q_sec_input);
         
         JButton button4 = new JButton("新規アカウント作成");
+        button4.setFont(f13);
         button4.setBounds(0, 350, 300, 50);
         button4.setBackground(Color.BLACK);
         button4.setForeground(Color.WHITE);
@@ -203,6 +209,7 @@ public class J2 extends JFrame implements ActionListener{
         panel02.add(button4);
 
         JButton button5 = new JButton("ホームに戻る");
+        button5.setFont(f13);
         button5.setBounds(0, 400, 300, 50);
         button5.setBackground(Color.BLACK);
         button5.setForeground(Color.WHITE);
@@ -239,6 +246,7 @@ public class J2 extends JFrame implements ActionListener{
         panel03.add(sq_input);
         
         JButton button6 = new JButton("パスワードを再設定する");
+        button6.setFont(f13);
         button6.setBounds(0, 220, 300, 50);
         button6.setBackground(Color.BLACK);
         button6.setForeground(Color.WHITE);
@@ -247,6 +255,7 @@ public class J2 extends JFrame implements ActionListener{
         panel03.add(button6);
         
         JButton button7 = new JButton("ホームに戻る");
+        button7.setFont(f13);
         button7.setBounds(0, 400, 300, 50);
         button7.setBackground(Color.BLACK);
         button7.setForeground(Color.WHITE);
@@ -267,6 +276,7 @@ public class J2 extends JFrame implements ActionListener{
         panel04.add(uh_mes);
         
         JButton button8 = new JButton("対局する");
+        button8.setFont(f13);
         button8.setBounds(0, 150, 300, 50);
         button8.setBackground(Color.BLACK);
         button8.setForeground(Color.WHITE);
@@ -275,6 +285,7 @@ public class J2 extends JFrame implements ActionListener{
         panel04.add(button8);
         
         JButton button9 = new JButton("対局成績を見る");
+        button9.setFont(f13);
         button9.setBounds(0, 250, 300, 50);
         button9.setBackground(Color.BLACK);
         button9.setForeground(Color.WHITE);
@@ -283,6 +294,7 @@ public class J2 extends JFrame implements ActionListener{
         panel04.add(button9);
         
         JButton button10 = new JButton("ログアウト");
+        button10.setFont(f13);
         button10.setBounds(0, 350, 300, 50);
         button10.setBackground(Color.BLACK);
         button10.setForeground(Color.WHITE);
@@ -333,6 +345,7 @@ public class J2 extends JFrame implements ActionListener{
         panel05.add(enemyLabel);
         
         button11 = new JButton("投了する");
+        button11.setFont(f13);
         button11.setBounds(0, 400, 300, 50);
         button11.setBackground(Color.BLACK);
         button11.setForeground(Color.WHITE);
@@ -342,6 +355,7 @@ public class J2 extends JFrame implements ActionListener{
         panel05.add(button11);
         
         button12 = new JButton("パスする");
+        button12.setFont(f13);
         button12.setBounds(0, 350, 300, 50);
         button12.setBackground(Color.BLACK);
         button12.setForeground(Color.WHITE);
@@ -366,7 +380,7 @@ public class J2 extends JFrame implements ActionListener{
         panel06.setPreferredSize(new Dimension(200, 100));
         panel06.setBackground(new Color(255,255,255));
         
-        JLabel label6 = new JLabel(ID+"さんの対局成績");
+        label6 = new JLabel(ID+"さんの対局成績");
         label6.setFont(f20);
         label6.setBounds(0, 0, 300, 80);
         panel06.add(label6);
@@ -396,13 +410,14 @@ public class J2 extends JFrame implements ActionListener{
         label_cast.setBounds(80, 300, 300, 80);
         panel06.add(label_cast);
         
-        JButton button12 = new JButton("戻る");
-        button12.setBounds(0, 400, 300, 50);
-        button12.setBackground(Color.BLACK);
-        button12.setForeground(Color.WHITE);
-        button12.setActionCommand("BackUserPage");
-        button12.addActionListener(this);
-        panel06.add(button12);
+        JButton button13 = new JButton("戻る");
+        button13.setFont(f13);
+        button13.setBounds(0, 400, 300, 50);
+        button13.setBackground(Color.BLACK);
+        button13.setForeground(Color.WHITE);
+        button13.setActionCommand("BackUserPage");
+        button13.addActionListener(this);
+        panel06.add(button13);
         
       //パスワード再設定
         JPanel panel07 = new JPanel();
@@ -419,13 +434,14 @@ public class J2 extends JFrame implements ActionListener{
         pw_input_re.setBounds(170, 175, 120, 30);
         panel07.add(pw_input_re);
         
-        JButton button13 = new JButton("確定");
-        button13.setBounds(0, 220, 300, 50);
-        button13.setBackground(Color.BLACK);
-        button13.setForeground(Color.WHITE);
-        button13.setActionCommand("reestablish");
-        button13.addActionListener(this);
-        panel07.add(button13);
+        JButton button14 = new JButton("確定");
+        button14.setFont(f13);
+        button14.setBounds(0, 220, 300, 50);
+        button14.setBackground(Color.BLACK);
+        button14.setForeground(Color.WHITE);
+        button14.setActionCommand("reestablish");
+        button14.addActionListener(this);
+        panel07.add(button14);
         
         // CardLayout用パネル
         cardPanel = new JPanel();
@@ -499,6 +515,7 @@ public class J2 extends JFrame implements ActionListener{
             break;
             
         case "BackHome":
+        	output.println("7");
         	layout.show(cardPanel, "1");
         	break;
         	    
@@ -699,6 +716,7 @@ public class J2 extends JFrame implements ActionListener{
     	int draw = Integer.parseInt(input.nextLine());
     	int cast = Integer.parseInt(input.nextLine());
     	double late = (double)win/(win+lose+draw+cast)*100;
+    	label6.setText(ID+"さんの対局成績");
     	label_win.setText("勝ち数  "+win);
     	label_lose.setText("負け数  "+lose);
     	label_draw.setText("引き分け数  "+draw);
