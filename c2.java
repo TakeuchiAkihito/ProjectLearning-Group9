@@ -489,6 +489,7 @@ public class J2 extends JFrame implements ActionListener{
         	}else {
         		layout.show(cardPanel, "7");
         	}
+        	break;
         	
         case "CheckRecord":
         	result();
@@ -1269,4 +1270,3 @@ class RedIcon implements Icon{
 	}
 	
 }
-
