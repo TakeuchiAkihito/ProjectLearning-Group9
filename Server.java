@@ -40,17 +40,19 @@ class ServThread extends Thread{
 		try {
 			  input = new Scanner(socket.getInputStream());
 			  PrintWriter output = new PrintWriter(socket.getOutputStream());
-			  Integer port =Server.serverS.getLocalPort();
-			  output.println(port.toString());
 
 		        while(true) {
 		        	switch(input.nextInt()) {
 		        	case 1:
 		        		Case1:{
+		        			input.nextLine();
 		        			for(int i=0;i<Server.num_account;i++) {
-			        			if((Server.account[i].ID == input.nextLine()) && (Server.account[i].PW == input.nextLine())) {
-			        				output.println("1");
-			        				System.out.println(Server.account[i].ID);
+		        				System.out.println("ID:"+Server.account[i].ID+" PW:"+Server.account[i].PW);
+			        			if((Server.account[i].ID.equals(input.nextLine())) && (Server.account[i].PW.equals(input.nextLine()))) {
+			        				System.out.println("ok");
+			        				output.println("Success");
+			        				output.flush();
+			        				System.out.println("ID:"+Server.account[Server.num_account].ID+" PW:"+Server.account[Server.num_account].PW);
 			        				break Case1;
 			        			}		        			
 			        		}
@@ -67,7 +69,9 @@ class ServThread extends Thread{
 			        		Server.account[Server.num_account].PW=input.nextLine();
 			        		Server.account[Server.num_account].Q_sec=input.nextLine();
 			        		System.out.println("ID:"+Server.account[Server.num_account].ID+" PW:"+Server.account[Server.num_account].PW+" Q_sec:"+Server.account[Server.num_account].Q_sec);
+			        		Server.num_account++;
 			        		output.println("Success");
+			        		output.flush();
 		        		}else {
 		        			output.println("0");
 		        		}break;
