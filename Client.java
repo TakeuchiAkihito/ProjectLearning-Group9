@@ -29,26 +29,33 @@ public class Client extends JFrame implements ActionListener{
     CardLayout layout;
     String ID ="";
     String name_enemy;
+   
     int win = 1,lose = 1,cast;
     JTextField id_input;
     Othello stone[][] = new Othello[10][10];
     JLabel uh_mes;
     JLabel aut_mes;
+    JLabel label6;
     JLabel turn;
     JLabel fault;
     JLabel fault2;
+    JLabel fault3;
+    JLabel fault4;
     JLabel label_late;
     JLabel label_win;
     JLabel label_lose;
+    JLabel label_draw;
     JLabel label_cast;
     JLabel enemyLabel;
     JTextField id_renew_input ;
     JTextField sq_input;
     JPasswordField pw_input;
+    JPasswordField pw_input_re;
     JTextField id_new_input;
     JTextField pw_new_input;
     JTextField Q_sec_input;
     JLabel outcomeLabel;
+    JButton button10;
     JButton button11;
     JButton button12;
     JButton[][] square = new JButton[8][8];
@@ -76,6 +83,7 @@ public class Client extends JFrame implements ActionListener{
 			frame = new Client("BorderLayoutDemo");
 			frame.setTitle("Othello");
 	        frame.setSize(310, 485);
+	        frame.setResizable(false);
 	        frame.setLocationRelativeTo(null);
 	        frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
 	        frame.setVisible(true);
@@ -88,6 +96,10 @@ public class Client extends JFrame implements ActionListener{
     public Client(String title)throws Exception {
     	super(title);
     	
+    	Font f13 = new Font("Serif", Font.PLAIN, 13);
+    	Font f20 = new Font("Serif", Font.PLAIN, 20);
+    	Font f30 = new Font("Serif", Font.PLAIN, 30);
+    	
         // ログインホーム
         JPanel panel01 = new JPanel();
         panel01.setLayout(null);
@@ -95,14 +107,17 @@ public class Client extends JFrame implements ActionListener{
         panel01.setBackground(new Color(255,255,255));
         
         JLabel label=new JLabel("Othello");
-        Font f = new Font("Serif", Font.PLAIN, 30);
-        label.setFont(f);
+        //Font f = new Font("Serif", Font.PLAIN, 30);
+        label.setFont(f30);
         label.setBounds(105, 0, 300, 80);
         
+        //Font f3 = new Font("Serif", Font.PLAIN, 20);
         aut_mes =new JLabel("");
-        aut_mes.setBounds(40, 250, 300, 80);
+        aut_mes.setFont(f13);
+        aut_mes.setBounds(35, 250, 300, 80);
         
         JLabel id = new JLabel("ID");
+        id.setFont(f20);
         id.setBounds(10, 100, 300, 80);
         panel01.add(id);
         
@@ -111,6 +126,7 @@ public class Client extends JFrame implements ActionListener{
         panel01.add(id_input);
         
         JLabel pw = new JLabel("パスワード");
+        pw.setFont(f20);
         pw.setBounds(10, 150, 300, 80);
         panel01.add(pw);
         
@@ -119,6 +135,7 @@ public class Client extends JFrame implements ActionListener{
         panel01.add(pw_input);
         
         JButton button1 = new JButton("ログイン");
+        button1.setFont(f13);
         button1.setBounds(0, 220, 300, 50);
         button1.setBackground(Color.BLACK);
         button1.setForeground(Color.WHITE);
@@ -126,6 +143,7 @@ public class Client extends JFrame implements ActionListener{
         button1.addActionListener(this);
 
         JButton button2 = new JButton("新規アカウント作成");
+        button2.setFont(f13);
         button2.setBounds(0, 350, 300, 50);
         button2.setBackground(Color.BLACK);
         button2.setForeground(Color.WHITE);
@@ -133,6 +151,7 @@ public class Client extends JFrame implements ActionListener{
         button2.addActionListener(this);
 
         JButton button3 = new JButton("パスワードを忘れた");
+        button3.setFont(f13);
         button3.setBounds(0, 400, 300, 50);
         button3.setBackground(Color.BLACK);
         button3.setForeground(Color.WHITE);
@@ -152,10 +171,11 @@ public class Client extends JFrame implements ActionListener{
         panel02.setBackground(new Color(255,255,255));
         
         fault = new JLabel("");
-        fault.setBounds(10, 500, 300, 80);
+        fault.setBounds(10,290, 300, 50);
         panel02.add(fault);
         
         JLabel id_new = new JLabel("ID");
+        id_new.setFont(f20);
         id_new.setBounds(10, 100, 300, 80);
         panel02.add(id_new);
         
@@ -164,6 +184,7 @@ public class Client extends JFrame implements ActionListener{
         panel02.add(id_new_input);
         
         JLabel pw_new = new JLabel("パスワード");
+        pw_new.setFont(f20);
         pw_new.setBounds(10, 150, 300, 80);
         panel02.add(pw_new);
         
@@ -172,6 +193,7 @@ public class Client extends JFrame implements ActionListener{
         panel02.add(pw_new_input);
         
         JLabel Q_sec = new JLabel("生年月日(例:1月1日は0101)");
+        Q_sec.setFont(f13);
         Q_sec.setBounds(10, 200, 300, 80);
         panel02.add(Q_sec);
         
@@ -180,6 +202,7 @@ public class Client extends JFrame implements ActionListener{
         panel02.add(Q_sec_input);
         
         JButton button4 = new JButton("新規アカウント作成");
+        button4.setFont(f13);
         button4.setBounds(0, 350, 300, 50);
         button4.setBackground(Color.BLACK);
         button4.setForeground(Color.WHITE);
@@ -188,6 +211,7 @@ public class Client extends JFrame implements ActionListener{
         panel02.add(button4);
 
         JButton button5 = new JButton("ホームに戻る");
+        button5.setFont(f13);
         button5.setBounds(0, 400, 300, 50);
         button5.setBackground(Color.BLACK);
         button5.setForeground(Color.WHITE);
@@ -206,6 +230,7 @@ public class Client extends JFrame implements ActionListener{
         panel03.add(fault2);
         
         JLabel id_renew = new JLabel("ID");
+        id_renew.setFont(f20);
         id_renew.setBounds(10, 100, 300, 80);
         panel03.add(id_renew);
         
@@ -214,6 +239,7 @@ public class Client extends JFrame implements ActionListener{
         panel03.add(id_renew_input);
         
         JLabel sq = new JLabel("生年月日(例:1月1日は0101)");
+        sq.setFont(f13);
         sq.setBounds(10, 150, 300, 80);
         panel03.add(sq);
         
@@ -222,6 +248,7 @@ public class Client extends JFrame implements ActionListener{
         panel03.add(sq_input);
         
         JButton button6 = new JButton("パスワードを再設定する");
+        button6.setFont(f13);
         button6.setBounds(0, 220, 300, 50);
         button6.setBackground(Color.BLACK);
         button6.setForeground(Color.WHITE);
@@ -230,6 +257,7 @@ public class Client extends JFrame implements ActionListener{
         panel03.add(button6);
         
         JButton button7 = new JButton("ホームに戻る");
+        button7.setFont(f13);
         button7.setBounds(0, 400, 300, 50);
         button7.setBackground(Color.BLACK);
         button7.setForeground(Color.WHITE);
@@ -245,11 +273,12 @@ public class Client extends JFrame implements ActionListener{
         
         uh_mes = new JLabel("ようこそ"+ID+"さん");
         uh_mes.setBounds(10, 10, 300, 80);
-        Font f2 = new Font("Serif", Font.PLAIN, 20);
-        uh_mes.setFont(f2);
+        //Font f2 = new Font("Serif", Font.PLAIN, 20);
+        uh_mes.setFont(f20);
         panel04.add(uh_mes);
         
         JButton button8 = new JButton("対局する");
+        button8.setFont(f13);
         button8.setBounds(0, 150, 300, 50);
         button8.setBackground(Color.BLACK);
         button8.setForeground(Color.WHITE);
@@ -257,7 +286,14 @@ public class Client extends JFrame implements ActionListener{
         button8.addActionListener(this);
         panel04.add(button8);
         
+        fault4 = new JLabel("");
+        fault4.setBounds(0, 200, 300, 50);
+        fault4.setForeground(Color.RED);
+        fault4.setHorizontalAlignment(JLabel.CENTER);
+        panel04.add(fault4);
+        
         JButton button9 = new JButton("対局成績を見る");
+        button9.setFont(f13);
         button9.setBounds(0, 250, 300, 50);
         button9.setBackground(Color.BLACK);
         button9.setForeground(Color.WHITE);
@@ -265,7 +301,8 @@ public class Client extends JFrame implements ActionListener{
         button9.addActionListener(this);
         panel04.add(button9);
         
-        JButton button10 = new JButton("ログアウト");
+        button10 = new JButton("ログアウト");
+        button10.setFont(f13);
         button10.setBounds(0, 350, 300, 50);
         button10.setBackground(Color.BLACK);
         button10.setForeground(Color.WHITE);
@@ -303,17 +340,21 @@ public class Client extends JFrame implements ActionListener{
         
         gp.setBackground(Color.BLACK);
         gp.setBounds(22, 10, 256, 256);
-        //panel05.add(gp);
         
         turn = new JLabel("");
-        turn.setBounds(110, 245, 300, 80);
+        turn.setFont(f13);
+        turn.setBounds(0, 245, 300, 80);
+        turn.setHorizontalAlignment(JLabel.CENTER);
         panel05.add(turn);
         
         enemyLabel = new JLabel("対戦相手 : "+name_enemy);
-        enemyLabel.setBounds(110, 280, 300, 80);
+        enemyLabel.setFont(f13);
+        enemyLabel.setBounds(0, 280, 300, 80);
+        enemyLabel.setHorizontalAlignment(JLabel.CENTER);
         panel05.add(enemyLabel);
         
         button11 = new JButton("投了する");
+        button11.setFont(f13);
         button11.setBounds(0, 400, 300, 50);
         button11.setBackground(Color.BLACK);
         button11.setForeground(Color.WHITE);
@@ -323,6 +364,7 @@ public class Client extends JFrame implements ActionListener{
         panel05.add(button11);
         
         button12 = new JButton("パスする");
+        button12.setFont(f13);
         button12.setBounds(0, 350, 300, 50);
         button12.setBackground(Color.BLACK);
         button12.setForeground(Color.WHITE);
@@ -347,38 +389,45 @@ public class Client extends JFrame implements ActionListener{
         panel06.setPreferredSize(new Dimension(200, 100));
         panel06.setBackground(new Color(255,255,255));
         
-        JLabel label6 = new JLabel(ID+"さんの対局成績");
-        label6.setFont(f2);
+        label6 = new JLabel(ID+"さんの対局成績");
+        label6.setFont(f20);
         label6.setBounds(0, 0, 300, 80);
+        label6.setHorizontalAlignment(JLabel.CENTER);
         panel06.add(label6);
         
         label_late = new JLabel("");
-        label_late.setFont(f);
-        label_late.setBounds(105, 100, 300, 80);
+        label_late.setFont(f30);
+        label_late.setBounds(80, 100, 300, 80);
         panel06.add(label_late);
         
         label_win = new JLabel("");
-        label_win.setFont(f);
-        label_win.setBounds(105, 150, 300, 80);
+        label_win.setFont(f30);
+        label_win.setBounds(80, 150, 300, 80);
         panel06.add(label_win);
         
         label_lose = new JLabel("");
-        label_lose.setFont(f);
-        label_lose.setBounds(105, 200, 300, 80);
+        label_lose.setFont(f30);
+        label_lose.setBounds(80, 200, 300, 80);
         panel06.add(label_lose);
         
+        label_draw = new JLabel("");
+        label_draw.setFont(f30);
+        label_draw.setBounds(80, 250, 300, 80);
+        panel06.add(label_draw);
+        
         label_cast = new JLabel("");
-        label_cast.setFont(f);
-        label_cast.setBounds(105, 250, 300, 80);
+        label_cast.setFont(f30);
+        label_cast.setBounds(80, 300, 300, 80);
         panel06.add(label_cast);
         
-        JButton button12 = new JButton("戻る");
-        button12.setBounds(0, 350, 300, 50);
-        button12.setBackground(Color.BLACK);
-        button12.setForeground(Color.WHITE);
-        button12.setActionCommand("BackUserPage");
-        button12.addActionListener(this);
-        panel06.add(button12);
+        JButton button13 = new JButton("戻る");
+        button13.setFont(f13);
+        button13.setBounds(0, 400, 300, 50);
+        button13.setBackground(Color.BLACK);
+        button13.setForeground(Color.WHITE);
+        button13.setActionCommand("BackUserPage");
+        button13.addActionListener(this);
+        panel06.add(button13);
         
       //パスワード再設定
         JPanel panel07 = new JPanel();
@@ -387,20 +436,27 @@ public class Client extends JFrame implements ActionListener{
         panel07.setBackground(new Color(255,255,255));
         
         JLabel pwnew = new JLabel("新しいパスワード");
-        pwnew.setBounds(10, 150, 300, 80);
+        pwnew.setFont(f20);
+        pwnew.setBounds(0, 150, 300, 80);
         panel07.add(pwnew);
         
-        JPasswordField pw_input_re = new JPasswordField(16);
+        pw_input_re = new JPasswordField(16);
         pw_input_re.setBounds(170, 175, 120, 30);
         panel07.add(pw_input_re);
         
-        JButton button13 = new JButton("確定");
-        button13.setBounds(0, 220, 300, 50);
-        button13.setBackground(Color.BLACK);
-        button13.setForeground(Color.WHITE);
-        button13.setActionCommand("D");
-        button13.addActionListener(this);
-        panel07.add(button13);
+        JButton button14 = new JButton("確定");
+        button14.setFont(f13);
+        button14.setBounds(0, 220, 300, 50);
+        button14.setBackground(Color.BLACK);
+        button14.setForeground(Color.WHITE);
+        button14.setActionCommand("reestablish");
+        button14.addActionListener(this);
+        panel07.add(button14);
+        
+        fault3 = new JLabel("");
+        fault2.setBounds(0, 280, 300, 80);
+        fault3.setHorizontalAlignment(JLabel.CENTER);
+        panel07.add(fault3);
         
         // CardLayout用パネル
         cardPanel = new JPanel();
@@ -431,12 +487,20 @@ public class Client extends JFrame implements ActionListener{
     	try {
     	int locate_x,locate_y;
         String cmd = e.getActionCommand();
-        ID = id_input.getText();
+        
         String outcome;
+        aut_mes.setText("");
+        fault.setText("");
+        fault2.setText("");
+        fault4.setText("");
         
         switch(cmd) {
         case "LoginPage":
         	if(authentication(id_input.getText(),String.valueOf(pw_input.getPassword()))) {
+        		ID = id_input.getText();
+        		id_input.setText("");
+        		pw_input.setText("");
+        		aut_mes.setText("");
         		uh_mes.setText("ようこそ "+ID+"さん");
         		layout.show(cardPanel, "4");
         	}else {
@@ -453,28 +517,65 @@ public class Client extends JFrame implements ActionListener{
             break;
         	
         case "MakeAccount":
-        	if(reset(id_new_input.getText(),pw_new_input.getText(),Q_sec_input.getText())) {
-        		layout.show(cardPanel, "1");
+        	if( id_new_input.getText().equals("") || pw_new_input.getText().equals("") || Q_sec_input.getText().equals("")) {
+        		fault.setText("必要事項が足りません");
         	}else {
-        		fault.setText("新規アカウントの作成に失敗しました");
-        		layout.show(cardPanel, "2");
+        	
+	        	if(reset(id_new_input.getText(),pw_new_input.getText(),Q_sec_input.getText())) {
+	        		id_new_input.setText("");
+	        		pw_new_input.setText("");
+	        		Q_sec_input.setText("");
+	        		fault.setText("");
+	        		layout.show(cardPanel, "1");
+	        	}else {
+	        		fault.setText("新規アカウントの作成に失敗しました");
+	        		layout.show(cardPanel, "2");
+	        	}
         	}
             break;
         	
         case "ResetPassword":
-        	if(re_authentication(id_renew_input.getText(),sq_input.getText())) {
-        		layout.show(cardPanel, "7");
+        	
+        	if( id_renew_input.getText().equals("") || sq_input.getText().equals("")) {
+        		fault2.setText("必要事項が足りません");
         	}else {
-        		fault2.setText("ユーザー名または秘密の質問の解答が正しくありません");
-        		layout.show(cardPanel, "3");
+        		
+	        	if(re_authentication(id_renew_input.getText(),sq_input.getText())) {
+	        		id_renew_input.setText("");
+	        		sq_input.setText("");
+	        		fault2.setText("");
+	        		layout.show(cardPanel, "7");
+	        	}else {
+	        		fault2.setText("ユーザー名か秘密の質問の解答が正しくありません");
+	        		layout.show(cardPanel, "3");
+	        	}
         	}
             break;
             
         case "BackHome":
+        	if( e.getSource() == button10 ) {
+        		output.println("7");
+        		output.flush();
+        	}
         	layout.show(cardPanel, "1");
-        	
         	break;
         	    
+        case "reestablish":
+        	
+        	if( (String.valueOf(pw_input_re.getPassword())).equals("") ){
+        		fault3.setText("必要事項が足りません");
+        	}else {
+        	
+	        	if(reestablish(String.valueOf(pw_input_re.getPassword()))) {
+	        		pw_input_re.setText("");
+	        		fault3.setText("");
+	        		layout.show(cardPanel, "1");
+	        	}else {
+	        		layout.show(cardPanel, "7");
+	        	}
+        	}
+        	break;
+        	
         case "CheckRecord":
         	result();
         	layout.show(cardPanel, "6");
@@ -488,33 +589,40 @@ public class Client extends JFrame implements ActionListener{
         case "START":   //first:先攻  rear:後攻
         	
         	String atk = search();
+        
+        	if( atk.equals("NoEnemy")) {
+        		;
+        		fault4.setText("対局相手がいません。少し待ってから試してください");
+        	}else {
         	
-            layout.show(cardPanel, "5");
-            // 手番情報の判定
-            if(atk.equals(Othello.FIRST)) {
-            	// othelloに手番情報を伝達
-            	othello.setColor(Othello.BRACK, Othello.WHITE);
-            	othello.judge(othello.getMyColor());
-            	// 画面を更新
-            	updateBoard(othello.getMyColor());	
-            }else {
-            	// othelloに手番情報を伝達
-            	othello.setColor(Othello.WHITE, Othello.BRACK);
-            	// 画面を更新
-            	turn.setText("相手の番です");
-            	
-            	// 相手のターン
-            	//(new SaThread(frame, othello, input)).start();	
-            	gameComThread = new SaThread(frame, othello, input);
-            	gameComThread.start();
-            }
-            
+	            layout.show(cardPanel, "5");
+	            // 手番情報の判定
+	            if(atk.equals(Othello.FIRST)) {
+	            	// othelloに手番情報を伝達
+	            	othello.setColor(Othello.BRACK, Othello.WHITE);
+	            	othello.judge(othello.getMyColor());
+	            	// 画面を更新
+	            	updateBoard(othello.getMyColor());	
+	            }else {
+	            	// othelloに手番情報を伝達
+	            	othello.setColor(Othello.WHITE, Othello.BRACK);
+	            	// 画面を更新
+	            	turn.setText("相手の番です");
+	            	
+	            	// 相手のターン
+	            	//(new SaThread(frame, othello, input)).start();	
+	            	gameComThread = new SaThread(frame, othello, input);
+	            	gameComThread.start();
+	            }
+        	}
             break;
             
         
         case Othello.RETIRE:
         	
-        	//output.println("retire");
+        	turn.setForeground(Color.RED);
+        	turn.setText("自分のターン: 投了しました");
+        	
         	sendToOutcome(Othello.RETIRE);
         	outcomeLabel.setForeground(Color.BLUE);
         	outcomeLabel.setText("敗北");
@@ -530,6 +638,9 @@ public class Client extends JFrame implements ActionListener{
         		sendToCoordinate(cmd);
         		sendToOutcome(outcome);
         		// 勝敗メッセージを表示
+        		turn.setForeground(Color.RED);
+        		turn.setText("2連続パスにより終了");
+        		
         		if( outcome.equals(Othello.WIN)) {
             		outcomeLabel.setForeground(Color.RED);
             		outcomeLabel.setText("勝利");
@@ -559,7 +670,8 @@ public class Client extends JFrame implements ActionListener{
     		
         case "GameEnd":
         	tm2.stop();
-        	gameComThread.join();
+        	//gameComThread.join();
+        	turn.setForeground(Color.BLACK);
         	othello.boardClear();
         	squareClear();
         	layout.show(cardPanel, "4");
@@ -612,10 +724,7 @@ public class Client extends JFrame implements ActionListener{
     	    
     		System.exit(0);
     		
-    	} catch (InterruptedException e1) {
-			// TODO 自動生成された catch ブロック
-			e1.printStackTrace();
-		}   	
+    	} 
     }
     
     public boolean authentication(String ID, String PW) {
@@ -640,39 +749,65 @@ public class Client extends JFrame implements ActionListener{
     	output.flush();
     	output.println(Q_sec);
     	output.flush();
-    	//String response = input.nextLine();
-    	String response = "1";
-    	return response.equals("1");
+    	//String response = "Success";
+    	String response = input.nextLine();
+    	System.out.println(response);
+    	return response.equals("Success");
     }
     
     public String  search() { //first:先攻  rear:後攻
     	output.println("3");
     	output.flush();
-    	output.println(ID);
-    	output.flush();
     	String response = input.nextLine();
+    	System.out.println(response);
+    	if( response.equals("NoEnemy")) {
+    		;
+    	}else {
     	name_enemy = input.nextLine();
     	enemyLabel.setText("対戦相手 : "+name_enemy);
+    	}
     	return response;
     }
     
     public void  result() {
     	output.println("4");
     	output.flush();
+    	
+    	double late = 0.0;
     	int win = Integer.parseInt(input.nextLine());
     	int lose = Integer.parseInt(input.nextLine());
+    	int draw = Integer.parseInt(input.nextLine());
     	int cast = Integer.parseInt(input.nextLine());
-    	double late = (double)win/(win+lose+cast);
+    	if( win == 0 && lose == 0 && draw == 0 && cast == 0 ) {
+    		late = 0;
+    	}else {
+    		late = (double)win/(win+lose+draw+cast)*100;
+    	}
+    	
+    	label6.setText(ID+"さんの対局成績");
     	label_win.setText("勝ち数  "+win);
     	label_lose.setText("負け数  "+lose);
+    	label_draw.setText("引き分け数  "+draw);
     	label_cast.setText("投了数  "+cast);
-    	label_late.setText("勝率  "+late+" %");
+    	label_late.setText("勝率  "+String.format("%.1f", late)+" %");
     }
     
     public boolean re_authentication(String ID, String Q_sec) {
     	output.println("5");
+    	output.flush();
     	output.println(ID);
+    	output.flush();
     	output.println(Q_sec);
+    	output.flush();
+    	String response = input.nextLine();
+    	return response.equals("Success");
+    }
+    
+    public boolean reestablish(String pw_new) {
+    	output.println("6");
+    	output.flush();
+    	output.println(pw_new);
+    	output.flush();
     	String response = input.nextLine();
     	return response.equals("Success");
     }
@@ -744,6 +879,9 @@ public class Client extends JFrame implements ActionListener{
     	String outcome;
     
     	if(cmd_enemy.equals(Othello.RETIRE)) {
+    		turn.setForeground(Color.RED);
+    		turn.setText("相手が投了しました");
+    		
     		outcomeLabel.setForeground(Color.RED);
     		outcomeLabel.setText("勝利");
     		tm2.start();
@@ -752,6 +890,9 @@ public class Client extends JFrame implements ActionListener{
     		if( othello.getPassCheck() ) {
     			outcome = othello.getOutcome();
             	sendToOutcome(outcome);
+            	turn.setForeground(Color.RED);
+            	turn.setText("相手のパスにより2連続パスが成立");
+            	
             	if( outcome.equals(Othello.WIN)) {
             		outcomeLabel.setForeground(Color.RED);
             		outcomeLabel.setText("勝利");
@@ -767,7 +908,9 @@ public class Client extends JFrame implements ActionListener{
     			othello.setPassCheck(true);
     			judgeCount = othello.judge(othello.getMyColor());
     			if(judgeCount == 0) {
-        			turn.setText("あなたの番です");
+    				turn.setForeground(Color.RED);
+        			turn.setText("相手のパス。あなたの打てる手はありません");
+        			
         			button11.setEnabled(true);
         			button12.setEnabled(true);
         		}else {
@@ -775,7 +918,10 @@ public class Client extends JFrame implements ActionListener{
         		}
     		}
     		
-    	}else if( cmd_enemy == "ConnectError") {
+    	}else if( cmd_enemy.equals("ConnectError")) {
+    		turn.setForeground(Color.RED);
+    		turn.setText("相手の接続が遮断されました");
+    		
     		outcomeLabel.setForeground(Color.RED);
     		outcomeLabel.setText("勝利");
     		tm2.start();
@@ -848,6 +994,7 @@ class SaThread extends Thread {
 	String message;
 	Scanner accept;
 	
+	
 	SaThread(Client frame, Othello othello, Scanner accept){
 		client = frame;
 		this.othello = othello;
@@ -858,11 +1005,10 @@ class SaThread extends Thread {
 	
 	public void run() {
 		try {
-			message = accept.nextLine();
 			
-			
-				
+			message = accept.nextLine();	
 			client.enemyProcess(message);
+			
 		} catch (InterruptedException e) {
 				// TODO 自動生成された catch ブロック
 				
@@ -1156,6 +1302,8 @@ class WhiteStone implements Icon{
 	public void paintIcon(Component c, Graphics g, int x, int y) {
 		g.setColor(Color.GREEN);
 		g.fillRect(0, 0, 31, 31);
+		g.setColor(Color.BLACK);
+		g.fillOval(1, 3, 28, 28);
 		g.setColor(Color.WHITE);
 		g.fillOval(1, 1, 28, 28);
 		
@@ -1180,6 +1328,8 @@ class BrackStone implements Icon{
 	public void paintIcon(Component c, Graphics g, int x, int y) {
 		g.setColor(Color.GREEN);
 		g.fillRect(0, 0, 31, 31);
+		g.setColor(Color.WHITE);
+		g.fillOval(1, 3, 28, 28);
 		g.setColor(Color.BLACK);
 		g.fillOval(1, 1, 28, 28);
 		
@@ -1238,6 +1388,5 @@ class RedIcon implements Icon{
 		// TODO 自動生成されたメソッド・スタブ
 		return 0;
 	}
-	
 }
-
+	
