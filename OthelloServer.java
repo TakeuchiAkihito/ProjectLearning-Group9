@@ -199,7 +199,7 @@ class ServThread extends Thread{
 		        		OthelloServer.account[this_acc].PW=input.nextLine();
 		        		output.println("Success");
         				output.flush();
-        				System.out.println("ID:"+OthelloServer.account[this_acc].ID+" Q_sec:"+OthelloServer.account[this_acc].PW);
+        				System.out.println("ID:"+OthelloServer.account[this_acc].ID+" PW:"+OthelloServer.account[this_acc].PW);
         				break;
 		        	}
 		        	
