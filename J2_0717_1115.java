@@ -1,6 +1,3 @@
-package J1;
-
-
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
@@ -20,6 +17,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -79,6 +77,10 @@ public class J2 extends JFrame implements ActionListener{
     JButton button19;
     JButton button20;
     Timer tm2;
+    
+    public JLayeredPane LPane;
+    CardsAni[][] ca = new CardsAni[6][6];//カードのアニメーション 一つ目の配列:0~3がプレイヤー、4がディーラー、5が山札 二つ目の配列:そのプレイヤーのn枚目のカード
+    CardsTh[][] ct = new CardsTh[6][6];
    
     static Socket socket;
     static PrintWriter output;
@@ -333,10 +335,15 @@ public class J2 extends JFrame implements ActionListener{
         panel04.add(label_background_4);
         
      // 対局画面
+        LPane = new JLayeredPane();
+        LPane.setBounds(0,0,1280,750);
+        LPane.setBackground(new Color(255,255,255));
+        
         JPanel panel05 = new JPanel();
         panel05.setLayout(null);
         panel05.setPreferredSize(new Dimension(200, 100));
         panel05.setBackground(new Color(255,255,255));
+        panel05.setBounds(0,0,1280,750);
         
         JLabel label_background_battle = new JLabel(icon_background_battle);
         label_background_battle.setBounds(0, 0, 1280, 750);
@@ -489,6 +496,10 @@ public class J2 extends JFrame implements ActionListener{
         panel05.add(button13);
         
         panel05.add(label_background_battle);
+        
+        panel05.add(label_background_battle);
+        LPane.setLayer(panel05, 1);
+        LPane.add(panel05);
        
      // 図鑑
         JPanel panel06 = new JPanel();
@@ -710,7 +721,7 @@ public class J2 extends JFrame implements ActionListener{
         cardPanel.add(panel01, "1");
         cardPanel.add(panel02, "2");
         cardPanel.add(panel04, "4");
-        cardPanel.add(panel05, "5");
+        cardPanel.add(LPane, "5");
         cardPanel.add(panel06, "6");
         cardPanel.add(panel08, "8");
         cardPanel.add(panel09, "9");
@@ -873,6 +884,13 @@ public class J2 extends JFrame implements ActionListener{
         	search();
         	layout.show(cardPanel, "5");
         	
+        	ca[5][0] = new CardsAni(1,0);
+ 	        LPane.setLayer(ca[5][0], 2);      
+ 	        LPane.add(ca[5][0]);
+ 	        
+ 	        ct[5][0] = new CardsTh(0, ca[5][0]);
+ 	        ct[5][0].start();
+        	
         	break;
         	
         case "BackUserHome":
@@ -905,10 +923,14 @@ public class J2 extends JFrame implements ActionListener{
         		}
         		card1 = input.nextLine();
         		deeler.cardlist.add(card1);
+        		System.out.println("deeler size in main" + deeler.cardlist.size() + deeler.cardlist);
         		calculate_point("-1");
         		
         		System.out.println(deeler.user_name);
     			System.out.println(kanji[Integer.parseInt(card1)].kanji);
+    			
+    			PreTh pt = new PreTh(ca, ct, LPane, player, deeler, kanji, "setup");
+        		pt.start();
         	}else {
         		button13.setEnabled(true);
         		label_chips.setText("再入力してください");
@@ -940,6 +962,9 @@ public class J2 extends JFrame implements ActionListener{
         		}
     		}
         	
+        	PreTh pt = new PreTh(ca, ct, LPane, player, deeler, kanji, "hit");
+    		pt.start();
+    		
         	break;
         	
         case "Stand":
@@ -951,29 +976,56 @@ public class J2 extends JFrame implements ActionListener{
         	
         	while(true) {
         		turn = input.nextLine();
+        		System.out.println("stand turn " + turn);
             	if(turn.equals("-2")) {
             		calculate_chips();
-                	register(Myturn);
+            		System.out.println("when -2 deeler size stand" + deeler.cardlist.size() + deeler.cardlist);
+            		PreTh pt1 = new PreTh(ca, ct, LPane, player, deeler, kanji, "hit");
+            		pt1.start();
+
+                	//register(Myturn);
                 	response = input.nextLine();
-                	if(response.equals("fin")) {
-                		result();
-                		layout.show(cardPanel, "9");
-                	}else {
-                		button13.setEnabled(true);
-                		button11.setEnabled(false);
-                		button12.setEnabled(false);
-                	}
-                	clear_point();
+//                	if(response.equals("fin")) {
+//                		result();
+//                		layout.show(cardPanel, "9");
+//                		
+//                		for(int i = 0; i < 20; i++) {
+//                			LPane.remove(i);
+//                		}
+//                		
+//                		for(int i = 0; i < 6; i++) {
+//                			for(int j = 0; j < 6; j++) {
+//                				ca[i][j] = new CardsAni(1,0);
+//                				ct[i][j] = new CardsTh(2, ca[i][j]);
+//                			}
+//                		}
+//                	}else {
+//                		PreTh pt2 = new PreTh(ca, ct, LPane, player, deeler, kanji, "reset");
+//                		pt2.start();
+//                		
+//                		button13.setEnabled(true);
+//                		button11.setEnabled(false);
+//                		button12.setEnabled(false);
+//                	}
+                	//clear_point();
             		break;
             	}else {
             		if(update_data(turn)) {
             			calculate_point(turn);
+            			System.out.println("stand updated");
             			break;
             		}else {
             			calculate_point(turn);
             		}
             	}
         	}
+        	if(!turn.equals("-2")) {
+        		System.out.println("deeler size stand " + deeler.cardlist.size() + deeler.cardlist);
+            	PreTh pt1 = new PreTh(ca, ct, LPane, player, deeler, kanji, "hit");
+        		pt1.start();
+        	}
+        	
+    		
         	break;	
         }
         
@@ -1060,7 +1112,9 @@ public class J2 extends JFrame implements ActionListener{
     	response = input.nextLine();
     	
     	if(turn.equals("-1")) {
+    		deeler.updated = false;
     		deeler.cardlist.add(response);
+    		System.out.println("deeler size in update" + deeler.cardlist.size() + deeler.cardlist);
     		
     		System.out.println(deeler.user_name);
 			System.out.println(kanji[Integer.parseInt(response)].kanji);
@@ -1068,6 +1122,7 @@ public class J2 extends JFrame implements ActionListener{
     		if(response.equals("-1")) {
     			player[turn_current].stand =false;
     		}else {
+    			player[turn_current].updated = false;
     			player[turn_current].cardlist.add(response);
     			calculate_point(turn);
     			
@@ -5529,6 +5584,7 @@ class data_Player{
 	int chips_bet;
 	int point_sum;
 	boolean stand = true;
+	boolean updated = true;
 	List<String> cardlist = new ArrayList<>();
 	
 	data_Player(String turn, String user_name,int chips){
